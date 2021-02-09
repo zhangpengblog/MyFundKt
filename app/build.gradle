@@ -33,6 +33,11 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "自选基金助手" + defaultConfig.versionName + ".apk"
+        }
+    }
 }
 
 dependencies {
