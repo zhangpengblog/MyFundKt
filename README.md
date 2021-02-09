@@ -1,5 +1,5 @@
 # MyFundKt
-
+https://juejin.cn/post/6927192571940700173/
 一个自选基金 kotlin-android 应用
 
 灵感来自浏览器插件 https://github.com/x2rr/funds
