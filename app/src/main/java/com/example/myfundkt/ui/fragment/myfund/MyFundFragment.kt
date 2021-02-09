@@ -7,9 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavController.OnDestinationChangedListener
@@ -23,28 +21,25 @@ import com.example.myfundkt.bean.top.Diff
 import com.example.myfundkt.databinding.FragmentMyFundBinding
 import com.example.myfundkt.ui.MyViewModel
 import com.example.myfundkt.utils.MyLog
-import com.example.myfundkt.utils.TimeUtils
 
 
 private const val TAG = "MyFundFragment"
-private const val RED = -0x1b6b7
-private const val GREEN = -0x5e3ba6
 private val topData = mutableListOf<Diff>()
 
 private val selectionData = mutableListOf<CollectionBean>()
 
 
 
-class MyFundFragment() : Fragment() {
+class MyFundFragment : Fragment() {
     private lateinit var myViewModel: MyViewModel
     private  lateinit var binding: FragmentMyFundBinding
-    private var topAdapter: TopAdapter = TopAdapter(topData as MutableList<Diff>)
-    private var selectionAdapter: SelectionAdapter = SelectionAdapter(selectionData as MutableList<CollectionBean>)
+    private var topAdapter: TopAdapter = TopAdapter(topData)
+    private var selectionAdapter: SelectionAdapter = SelectionAdapter(selectionData)
     private lateinit var controller: NavController
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         activity?.title = "首页"
 
@@ -57,7 +52,7 @@ class MyFundFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         controller = view.let { Navigation.findNavController(it) }
-        binding.root?.setOnRefreshListener {
+        binding.root.setOnRefreshListener {
             refreshData()
         }
 
@@ -66,28 +61,26 @@ class MyFundFragment() : Fragment() {
 
         binding.bottom.layoutManager=LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.bottom.adapter= selectionAdapter
-        selectionAdapter.setOnItemClickListener { adapter, view, position ->
+        selectionAdapter.setOnItemClickListener { _, _, position ->
 
-            if (controller != null) {
-                val args = Bundle()
-                args.putString("代码", selectionData[position].代码)
+            val args = Bundle()
+            args.putString("代码", selectionData[position].代码)
 //                controller.navigate(R.id.action_myFundFragment_to_fundInfoFragment,args)
-                    myViewModel.infomationCode.value = selectionData[position].代码
-                    MyLog.d(TAG,"代码"+selectionData[position].代码)
+            myViewModel.infomationCode.value = selectionData[position].代码
+            MyLog.d(TAG,"代码"+selectionData[position].代码)
 
-                controller!!.navigate(R.id.action_myFundFragment_to_pagesFragment)
+            controller.navigate(R.id.action_myFundFragment_to_pagesFragment)
 
 
-            }
         }
 
     }
 
     private fun refreshData() {
-        myViewModel?.let {
-           it.initCode()
-           it.initIndexFund()
-           it.initSellectionFund()
+        myViewModel.let {
+            it.initCode()
+            it.initIndexFund()
+            it.initSellectionFund()
         }
 
     }
@@ -102,11 +95,11 @@ class MyFundFragment() : Fragment() {
             initSellectionFund()
             getHoliday()
 
-            progressBarVisibility.observe(viewLifecycleOwner, Observer {
+            progressBarVisibility.observe(viewLifecycleOwner, {
                 binding.progressBar.visibility = it
             })
 
-            topLiveData.observe(viewLifecycleOwner, Observer {
+            topLiveData.observe(viewLifecycleOwner, {
                 binding.root.finishRefresh()
                 Log.d(TAG, "onActivityCreated:topLiveData "+it)
                 topData.clear()
@@ -114,7 +107,7 @@ class MyFundFragment() : Fragment() {
                 topAdapter.notifyDataSetChanged()
 
             })
-            collection.observe(viewLifecycleOwner, Observer {
+            collection.observe(viewLifecycleOwner, {
                 binding.root.finishRefresh()
                 if (it != null) {
                     selectionData.clear()
@@ -130,18 +123,18 @@ class MyFundFragment() : Fragment() {
                         holding += it.持有收益?.toFloat() ?: 0f
                         today += it.估算收益?.toFloat() ?: 0f
                     }
-                    binding.amount?.apply {
+                    binding.amount.apply {
                         setTextColor(Color.RED)
                         String.format("%.2f", amount).let {
-                            setText(it)
+                            text = it
                         }
                     }
 
 
                     //持有收益率
                     (String.format("%.2f", (holding / amount)*100) + "%").also {
-                        binding.holding?.apply {
-                            setText(it)
+                        binding.holding.apply {
+                            text = it
                             if (it.contains("-")) {
                                 setTextColor(Color.GREEN)
                             } else {
@@ -152,8 +145,8 @@ class MyFundFragment() : Fragment() {
 
                     //持有收益
                     String.format("%.2f", holding).also {
-                        binding.holdingD?.apply {
-                            setText(it)
+                        binding.holdingD.apply {
+                            text = it
                             if (it.contains("-")) {
                                 setTextColor(Color.GREEN)
                             } else {
@@ -165,8 +158,8 @@ class MyFundFragment() : Fragment() {
 
                     //今日收益
                     String.format("%.2f", today).also {
-                        binding.todayD?.apply {
-                            setText(it)
+                        binding.todayD.apply {
+                            text = it
                             if (it.contains("-")) {
                                 setTextColor(Color.GREEN)
                             } else {
@@ -177,8 +170,8 @@ class MyFundFragment() : Fragment() {
 
                     //今日收益率
                     (String.format("%.2f", (today / amount)*100) + "%").also {
-                        binding.today?.apply {
-                            setText(it)
+                        binding.today.apply {
+                            text = it
                             if (it.contains("-")) {
                                 setTextColor(Color.GREEN)
                             } else {
@@ -193,10 +186,6 @@ class MyFundFragment() : Fragment() {
         }
 
 
-        controller?.addOnDestinationChangedListener(OnDestinationChangedListener { controller, destination, arguments ->
-            myViewModel.initCode()
-            myViewModel.initSellectionFund()
-        })
     }
 
 

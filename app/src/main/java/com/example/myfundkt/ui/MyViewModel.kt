@@ -57,6 +57,9 @@ class MyViewModel : ViewModel() {
             GetRetrofit.getPush2().create(Api::class.java).getQT(getExponentMap())
         ) {
             override fun onSuccess(total: Int, diffBeanList: List<Diff>) {
+                if (codes.size.equals(0)){
+                    _progressBarVisibility.value = View.GONE
+                }
                 _topLiveData.value = diffBeanList
             }
         }
