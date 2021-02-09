@@ -20,8 +20,8 @@ APK请自取
 
 支付宝
 
-![zfb](https://github.com/zhangpengblog/MyFundKt/blob/main/zfb.png)
+![zfb](https://i.loli.net/2021/02/09/RbmEGth25DcIwok.png)
 
 微信
 
-![wx](https://github.com/zhangpengblog/MyFundKt/blob/main/wx.png)
+![wx](https://i.loli.net/2021/02/09/i7aQ1bEW3OAk4dH.png)
