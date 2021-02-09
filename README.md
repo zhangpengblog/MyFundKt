@@ -20,7 +20,7 @@ APK请自取
 
 支付宝
 
-![zfb](https://i.loli.net/2021/02/09/RbmEGth25DcIwok.png)
+![zfb](https://github.com/zhangpengblog/MyFundKt/blob/main/zfb.png)
 
 微信
 
