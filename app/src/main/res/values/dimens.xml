@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="fab_margin">20dp</dimen>
+    <dimen name="small_text">12sp</dimen>
+    <dimen name="fund_title_font">18sp</dimen>
+</resources>

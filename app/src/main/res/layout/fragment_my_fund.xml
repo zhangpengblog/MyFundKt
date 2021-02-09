@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+<com.scwang.smartrefresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/LTGRAY"
+    tools:context=".ui.fragment.myfund.MyFundFragment">
+
+    <com.scwang.smartrefresh.layout.header.ClassicsHeader
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/top"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    tools:listitem="@layout/item_top"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.example.myfundkt.utils.RoundRelativeLayout
+                    android:id="@+id/roundRelativeLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:theme="@style/Theme.MyFundKt"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/top">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/appCompatTextView4"
+                            android:layout_width="120dp"
+                            android:layout_height="30dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:gravity="center"
+                            android:text="总金额"
+                            android:textAlignment="center"
+                            android:textSize="16sp"
+                            android:theme="@style/MaterialAlertDialog.MaterialComponents.Title.Text"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/amount"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginBottom="16dp"
+                            android:gravity="center"
+                            android:textAlignment="center"
+                            android:textSize="20sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@+id/appCompatTextView4"
+                            app:layout_constraintStart_toStartOf="@+id/appCompatTextView4"
+                            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView4"
+                            tools:text="9999" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/appCompatTextView6"
+                            android:layout_width="100dp"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="8dp"
+                            android:gravity="center_vertical|end"
+                            android:text="持有收益"
+                            android:textAlignment="viewEnd"
+                            android:theme="@style/MaterialAlertDialog.MaterialComponents.Title.Text"
+                            app:layout_constraintEnd_toStartOf="@+id/appCompatTextView7"
+                            app:layout_constraintHorizontal_bias="1.0"
+                            app:layout_constraintStart_toEndOf="@+id/appCompatTextView4"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/holding"
+                            android:layout_width="0dp"
+                            android:layout_height="25dp"
+                            android:gravity="center_vertical|end"
+                            app:layout_constraintEnd_toEndOf="@+id/appCompatTextView6"
+                            app:layout_constraintStart_toStartOf="@+id/appCompatTextView6"
+                            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView6"
+                            tools:text="9999" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/holdingD"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:gravity="center_vertical|end"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@+id/holding"
+                            app:layout_constraintStart_toStartOf="@+id/holding"
+                            app:layout_constraintTop_toBottomOf="@+id/holding"
+                            tools:text="9999" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/appCompatTextView7"
+                            android:layout_width="100dp"
+                            android:layout_height="40dp"
+                            android:layout_marginEnd="16dp"
+                            android:gravity="center_vertical|end"
+                            android:text="日收益"
+                            android:textAlignment="viewEnd"
+                            android:theme="@style/MaterialAlertDialog.MaterialComponents.Title.Text"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/today"
+                            android:layout_width="0dp"
+                            android:layout_height="25dp"
+                            android:gravity="center_vertical|end"
+                            app:layout_constraintEnd_toEndOf="@+id/appCompatTextView7"
+                            app:layout_constraintStart_toStartOf="@+id/appCompatTextView7"
+                            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView7"
+                            tools:text="9999" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/todayD"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:gravity="center_vertical|end"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@+id/today"
+                            app:layout_constraintStart_toStartOf="@+id/today"
+                            app:layout_constraintTop_toBottomOf="@+id/today"
+                            tools:text="9999" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.example.myfundkt.utils.RoundRelativeLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/bottom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="100dp"
+                    tools:listitem="@layout/item_my_fund"
+                    android:fillViewport="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/roundRelativeLayout" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@+id/roundRelativeLayout"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/roundRelativeLayout" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+</com.scwang.smartrefresh.layout.SmartRefreshLayout>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pages_nav"
+    app:startDestination="@id/fundInfoFragment">
+    <fragment
+        android:id="@+id/fundInfoFragment"
+        android:name="com.example.myfundkt.ui.fragment.information.FundInfoFragment"
+        android:label="FundInfoFragment" />
+    <fragment
+        android:id="@+id/holdingStocksFragment"
+        android:name="com.example.myfundkt.ui.fragment.holdingStocks.HoldingStocksFragment"
+        android:label="holding_stocks_fragment"
+        tools:layout="@layout/holding_stocks_fragment" />
+    <fragment
+        android:id="@+id/editFragment"
+        android:name="com.example.myfundkt.ui.fragment.edit.EditFragment"
+        android:label="edit_fragment"
+        tools:layout="@layout/edit_fragment" />
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.example.myfundkt.ui.fragment.history.HistoryFragment"
+        android:label="history_fragment"
+        tools:layout="@layout/history_fragment" />
+</navigation>

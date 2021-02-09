@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/myFundFragment">
+
+    <fragment
+        android:id="@+id/myFundFragment"
+        android:name="com.example.myfundkt.ui.fragment.myfund.MyFundFragment"
+        android:label="fragment_my_fund"
+        tools:layout="@layout/fragment_my_fund" >
+        <action
+            android:id="@+id/action_myFundFragment_to_pagesFragment"
+            app:destination="@id/pagesFragment" />
+        <action
+            android:id="@+id/action_myFundFragment_to_importDataFragment"
+            app:destination="@id/importDataFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pagesFragment"
+        android:name="com.example.myfundkt.ui.fragment.viewPage2.PagesFragment"
+        android:label="PagesFragment" />
+    <fragment
+        android:id="@+id/importDataFragment"
+        android:name="com.example.myfundkt.ui.fragment.importData.ImportDataFragment"
+        android:label="import_data_fragment"
+        tools:layout="@layout/import_data_fragment" >
+        <action
+            android:id="@+id/action_importDataFragment_to_myFundFragment"
+            app:destination="@id/myFundFragment" />
+    </fragment>
+</navigation>
