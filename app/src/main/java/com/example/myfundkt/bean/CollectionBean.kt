@@ -9,5 +9,6 @@ data class CollectionBean(
     var 持有收益率: String?,
     var 涨跌幅: String?,
     var 估算收益: String?,
+    var 时间: String?,
 )
 

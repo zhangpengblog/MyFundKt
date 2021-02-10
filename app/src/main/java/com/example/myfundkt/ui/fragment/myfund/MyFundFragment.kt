@@ -1,26 +1,32 @@
 package com.example.myfundkt.ui.fragment.myfund
 
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import androidx.navigation.NavController.OnDestinationChangedListener
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.listener.OnItemLongClickListener
 import com.example.myfundkt.R
 import com.example.myfundkt.adapter.SelectionAdapter
 import com.example.myfundkt.adapter.TopAdapter
 import com.example.myfundkt.bean.CollectionBean
 import com.example.myfundkt.bean.top.Diff
 import com.example.myfundkt.databinding.FragmentMyFundBinding
+import com.example.myfundkt.db.DbRepository
 import com.example.myfundkt.ui.MyViewModel
 import com.example.myfundkt.utils.MyLog
+import com.example.myfundkt.utils.ToastUtil
 
 
 private const val TAG = "MyFundFragment"
@@ -73,6 +79,31 @@ class MyFundFragment : Fragment() {
 
 
         }
+        selectionAdapter.setOnItemLongClickListener(object : OnItemLongClickListener {
+
+            override fun onItemLongClick(
+                adapter: BaseQuickAdapter<*, *>,
+                view: View,
+                position: Int
+            ): Boolean {
+                val fund = selectionData[position]
+                val code = fund.代码
+                val repository = DbRepository()
+                val entity = repository.FindByCode(code)
+                val id = entity.id
+                 activity?.let {
+                    AlertDialog.Builder(it).setMessage("删除").setPositiveButton("删除",
+                        DialogInterface.OnClickListener { dialogInterface, i ->
+                            repository.DeleteById(id)
+                            selectionAdapter.removeAt(position)
+                            selectionAdapter.notifyDataSetChanged()
+                        })
+                }?.setNegativeButton("取消", null)
+                    ?.create()?.show()
+                return true
+            }
+        })
+
 
     }
 

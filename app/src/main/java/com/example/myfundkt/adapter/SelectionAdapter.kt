@@ -2,19 +2,16 @@ package com.example.myfundkt.adapter
 
 import android.graphics.Color
 import android.os.Build
-import android.os.SystemClock
+import android.view.View
 import androidx.annotation.RequiresApi
 import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.listener.OnItemLongClickListener
+import com.chad.library.adapter.base.module.BaseDraggableModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.example.myfundkt.R
 import com.example.myfundkt.bean.CollectionBean
 import com.example.myfundkt.utils.MyLog
-import com.example.myfundkt.utils.TimeUtils
-import java.sql.Time
-import java.sql.Timestamp
-import java.time.LocalTime
-import java.util.*
-import java.util.concurrent.TimeUnit
+import com.example.myfundkt.utils.ToastUtil
 
 private const val TAG = "SelectionAdapter"
 class SelectionAdapter(CollectionBean: MutableList<CollectionBean>?): BaseQuickAdapter<CollectionBean, BaseViewHolder>(
@@ -24,25 +21,6 @@ class SelectionAdapter(CollectionBean: MutableList<CollectionBean>?): BaseQuickA
     @RequiresApi(Build.VERSION_CODES.P)
     override fun convert(holder: BaseViewHolder, item: CollectionBean) {
         with(item){
-//            if (PDATE==TimeUtils.TimeStempToDay(System.currentTimeMillis())){
-//                holder
-//                涨跌幅?.let {
-//                    if (it.contains("-")){
-//                        holder.setTextColor(R.id.zdf, Color.GREEN)
-//                    } else {
-//                        holder.setTextColor(R.id.zdf, Color.RED)
-//                    }
-//                }
-//            }else{
-//                holder.setText(R.id.zdf, 估算涨跌幅)
-//                估算涨跌幅?.let {
-//                    if (it.contains("-")){
-//                        holder.setTextColor(R.id.zdf, Color.GREEN)
-//                    } else {
-//                        holder.setTextColor(R.id.zdf, Color.RED)
-//                    }
-//                }
-//            }
 
             MyLog.d(TAG, "gssy: " + 估算收益)
             holder.setText(R.id.name, 名称)
@@ -52,6 +30,7 @@ class SelectionAdapter(CollectionBean: MutableList<CollectionBean>?): BaseQuickA
                 .setText(R.id.gssy, 估算收益)
                 .setText(R.id.fe,持有份额)
                 .setText(R.id.zdf, 涨跌幅)
+                .setText(R.id.time,时间)
 
             涨跌幅?.let {
                 if (it.contains("-")){
