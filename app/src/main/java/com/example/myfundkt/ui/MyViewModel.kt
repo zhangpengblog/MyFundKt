@@ -141,8 +141,7 @@ class MyViewModel : ViewModel() {
                 val 估算涨跌: String = b.GSZZL//估算涨跌
                 val 代码 = b.FCODE
                 val 名称 = b.SHORTNAME
-                val 时间 = b.GZTIME.substring(IntRange(0,9))
-                Log.d(TAG, "时间: "+时间)
+                val 时间 = b.GZTIME.substring(IntRange(10,15))
                 val 涨跌幅: String = b.NAVCHGRT //涨跌幅
                 val 持有额 = getCye(昨日价, 持有份额) //持有额
                 val 持有收益 = getCysy(昨日价, 持有份额, 成本价) //持有收益
@@ -152,7 +151,7 @@ class MyViewModel : ViewModel() {
                 Log.d(TAG, "setLiveCollection:时间 "+时间)
 
                 var 涨跌 = ""
-                if (b.PDATE .equals(时间)){//已结算
+                if (b.PDATE .equals(b.GZTIME.substring(IntRange(0,9)))){//已结算
                     Log.d(TAG, "setLiveCollection: 已结算")
                     估算收益 =getGssy(涨跌幅, 持有份额, 昨日价)
                     涨跌=涨跌幅
