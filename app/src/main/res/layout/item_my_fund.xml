@@ -165,8 +165,20 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_alignParentTop="true"
+            android:layout_marginEnd="8dp"
             android:text="xx:xx"
+            android:gravity="center"
             app:layout_constraintBottom_toTopOf="@+id/appCompatTextView5"
+            app:layout_constraintEnd_toStartOf="@+id/appCompatImageView"
+            app:layout_constraintTop_toTopOf="@+id/name"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/appCompatImageView"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/ic_baseline_check_circle_24"
+            app:layout_constraintBottom_toBottomOf="@+id/name"
             app:layout_constraintEnd_toEndOf="@+id/name"
             app:layout_constraintTop_toTopOf="@+id/name" />
 

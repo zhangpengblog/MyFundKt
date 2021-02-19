@@ -10,5 +10,6 @@ data class CollectionBean(
     var 涨跌幅: String?,
     var 估算收益: String?,
     var 时间: String?,
+    var updated: Boolean?
 )
 

@@ -151,10 +151,12 @@ class MyViewModel : ViewModel() {
                 Log.d(TAG, "setLiveCollection:时间 "+时间)
 
                 var 涨跌 = ""
+                var updated =false
                 if (b.PDATE .equals(b.GZTIME.substring(IntRange(0,9)))){//已结算
                     Log.d(TAG, "setLiveCollection: 已结算")
                     估算收益 =getGssy(涨跌幅, 持有份额, 昨日价)
                     涨跌=涨跌幅
+                    updated = true
                 }else{
                     Log.d(TAG, "setLiveCollection: 未结算")
                     估算收益 = getGssy(估算涨跌, 持有份额, 昨日价)
@@ -162,7 +164,7 @@ class MyViewModel : ViewModel() {
                 }
 
                 val bean = CollectionBean(代码,名称,String.format("%.2f", 持有份额),持有额,持有收益,持有收益率+"%",
-                    涨跌+"%",估算收益,时间)
+                    涨跌+"%",估算收益,时间,updated)
                 return bean
             }
 

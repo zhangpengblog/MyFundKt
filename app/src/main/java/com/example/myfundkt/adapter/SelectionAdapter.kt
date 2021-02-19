@@ -62,6 +62,14 @@ class SelectionAdapter(CollectionBean: MutableList<CollectionBean>?): BaseQuickA
                     holder.setTextColor(R.id.cysyl, Color.RED)
                 }
             }
+
+            updated?.let {
+                if (it){
+                    holder.setGone(R.id.appCompatImageView,false)
+                }else{
+                    holder.setGone(R.id.appCompatImageView,true)
+                }
+            }
         }
 
     }
