@@ -13,6 +13,8 @@ public interface Api {
     @GET("get")
     Call<ResponseBody> getQT(@QueryMap HashMap<String,String> map);
 
+
+
     @GET("FundMNewApi/FundMNFInfo")
     Call<ResponseBody> getBottoms(@QueryMap HashMap<String,String> map);
 

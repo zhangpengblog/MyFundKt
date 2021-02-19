@@ -160,8 +160,10 @@ class MyFundFragment : Fragment() {
     private fun refreshData() {
         myViewModel.let {
             it.initCode()
-            it.initIndexFund()
-            it.initSellectionFund()
+//            it.initIndexFund()
+            it.initFundCoro()
+//            it.initSellectionFund()
+            it.initSelectedFundCoro()
         }
 
     }
@@ -172,8 +174,9 @@ class MyFundFragment : Fragment() {
 
         myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java).apply {
 
-            initIndexFund()
-            initSellectionFund()
+//            initIndexFund()
+            initFundCoro()
+            initSelectedFundCoro()
             getHoliday()
 
             progressBarVisibility.observe(viewLifecycleOwner, {

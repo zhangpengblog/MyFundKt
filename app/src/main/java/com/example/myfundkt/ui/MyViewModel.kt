@@ -3,7 +3,10 @@ package com.example.myfundkt.ui
 import android.annotation.SuppressLint
 import android.util.Log
 import android.view.View
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.myfundkt.bean.CollectionBean
 import com.example.myfundkt.bean.selection.Data
 import com.example.myfundkt.bean.top.Diff
@@ -11,16 +14,21 @@ import com.example.myfundkt.db.DbRepository
 import com.example.myfundkt.db.entity.FoudInfoEntity
 import com.example.myfundkt.http.Api
 import com.example.myfundkt.http.GetRetrofit
+import com.example.myfundkt.http.KtApi
 import com.example.myfundkt.http.response.BottomsResponse
 import com.example.myfundkt.http.response.HolidayResponse
-import com.example.myfundkt.http.response.QtResponse
 import com.example.myfundkt.utils.MyLog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.util.*
+import kotlin.collections.List
+import kotlin.collections.MutableList
+import kotlin.collections.isNotEmpty
+import kotlin.collections.listOf
+import kotlin.collections.mutableListOf
+import kotlin.collections.set
 
 private const val TAG = "MyViewModel"
 
@@ -55,25 +63,47 @@ class MyViewModel : ViewModel() {
     }
 
 
-    fun initIndexFund() {
+//    fun initIndexFund() {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            object : QtResponse(
+//                GetRetrofit.getPush2().create(Api::class.java).getQT(getExponentMap())
+//            ) {
+//                override fun onSuccess(total: Int, diffBeanList: List<Diff>) {
+//                    if (codes.size == 0){
+//                        _progressBarVisibility.value = View.GONE
+//                    }
+//                    _topLiveData.value = diffBeanList
+//                }
+//            }
+//        }
+//
+//    }
+
+     fun initFundCoro(){
+        val  api = GetRetrofit.getPush2().create(KtApi::class.java)
         viewModelScope.launch(Dispatchers.IO) {
-            object : QtResponse(
-                GetRetrofit.getPush2().create(Api::class.java).getQT(getExponentMap())
-            ) {
-                override fun onSuccess(total: Int, diffBeanList: List<Diff>) {
-                    if (codes.size == 0){
-                        _progressBarVisibility.value = View.GONE
+            try {
+                val response = api.getfunds(getExponentMap())
+                if (response.isSuccessful){
+                   val topBean = response.body()
+                    topBean?.let {
+                        val diffBeanList: List<Diff> = it.data.diff
+                        Log.d(TAG, "initFundCoro: $diffBeanList")
+                        if (codes.size == 0) {
+                            _progressBarVisibility.value = View.GONE
+                        }
+                        _topLiveData.postValue(diffBeanList)
                     }
-                    _topLiveData.value = diffBeanList
                 }
+            }catch (e:Exception){
+                Log.e(TAG, "initFundCoro: ${e.message}",e )
             }
         }
-
     }
 
     //转换模型
-    fun setSelectionData(data: List<Data>) {
-        _selectionData.value = data
+    private fun setSelectionData(data: List<Data>) {
+        _selectionData.postValue(data)
         if (data.isNotEmpty()) {
             val list: MutableList<CollectionBean> = ArrayList()
             for (b in data) {
@@ -91,8 +121,8 @@ class MyViewModel : ViewModel() {
                     list.add(bean)
                 }
             }
-            _collection.value = null
-            _collection.value = list
+            _collection.postValue(null)
+            _collection.postValue(list)
 
 
         }
@@ -251,27 +281,47 @@ class MyViewModel : ViewModel() {
 
     }
 
-    fun initSellectionFund() {
-        viewModelScope.launch(Dispatchers.IO) {
-            object : BottomsResponse(
-                GetRetrofit.getFundmobapi().create(Api::class.java).getBottoms(
-                    getSellectionMap()
-                )
-            ){
-                override fun onError() {
+//    fun initSellectionFund() {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            object : BottomsResponse(
+//                GetRetrofit.getFundmobapi().create(Api::class.java).getBottoms(
+//                    getSellectionMap()
+//                )
+//            ){
+//                override fun onError() {
+//
+//                }
+//
+//                override fun onSuccess(it: List<Data>){
+//                    _progressBarVisibility.value = View.GONE
+//                    it.let {
+//                        setSelectionData(it)
+//                    }
+//
+//                }
+//            }
+//        }
+//
+//    }
 
-                }
-
-                override fun onSuccess(it: List<Data>){
-                    _progressBarVisibility.value = View.GONE
-                    it.let {
-                        setSelectionData(it)
+    fun initSelectedFundCoro(){
+        val api = GetRetrofit.getFundmobapi().create(KtApi::class.java)
+        viewModelScope.launch (Dispatchers.IO){
+            try {
+                _progressBarVisibility.postValue(View.GONE)
+                val response = api.getSellected(getSellectionMap())
+                if (response.isSuccessful){
+                    val selectionBean =response.body()
+                    selectionBean?.let {
+                        it.Datas?.let { it1 -> setSelectionData(it1) }
                     }
-
                 }
-            }
-        }
 
+            }catch (e:Exception){
+                Log.e(TAG, "initSelectedFundCoro: ",e )
+            }
+
+        }
     }
 
     fun getHoliday() {
@@ -300,8 +350,8 @@ class MyViewModel : ViewModel() {
                         val timerTask: TimerTask = object : TimerTask() {
                             override fun run() {
                                 MyLog.d(TAG, "Redo: ")
-                                initIndexFund()
-                                initSellectionFund()
+                                initFundCoro()
+                                initSelectedFundCoro()
                                 MyLog.d(
                                     TAG,
                                     "TimerTask: " + Date().time
