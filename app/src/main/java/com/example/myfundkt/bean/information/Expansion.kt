@@ -5,35 +5,35 @@ import com.google.gson.annotations.SerializedName
 
 data class Expansion(
     @SerializedName("BUY")
-    var bUY: Boolean?,
+    var bUY: Boolean?=true,
     @SerializedName("DTZT")
-    var dTZT: String?,
+    var dTZT: String?="",
     @SerializedName("DWJZ")
-    var dWJZ: String?,
+    var dWJZ: String?="",
     @SerializedName("FCODE")
-    var fCODE: String?,
+    var fCODE: String?="",
     @SerializedName("GSZZL")
-    var gSZZL: String?,
+    var gSZZL: String?="",
     @SerializedName("GZ")
-    var gZ: String?,
+    var gZ: String?="",
     @SerializedName("GZTIME")
-    var gZTIME: String?,
+    var gZTIME: String?="",
     @SerializedName("GZZF")
-    var gZZF: String?,
+    var gZZF: String?="",
     @SerializedName("ISBUY")
-    var iSBUY: String?,
+    var iSBUY: String?="",
     @SerializedName("JZRQ")
-    var jZRQ: String?,
+    var jZRQ: String?="",
     @SerializedName("Market")
-    var market: String?,
+    var market: String?="",
     @SerializedName("rate")
-    var rate: String?,
+    var rate: String?="",
     @SerializedName("SGZT")
-    var sGZT: String?,
+    var sGZT: String?="",
     @SerializedName("SHORTNAME")
-    var sHORTNAME: String?,
+    var sHORTNAME: String?="",
     @SerializedName("SHZT")
-    var sHZT: String?,
+    var sHZT: String?="",
     @SerializedName("SOURCERATE")
-    var sOURCERATE: String?
+    var sOURCERATE: String?=""
 )

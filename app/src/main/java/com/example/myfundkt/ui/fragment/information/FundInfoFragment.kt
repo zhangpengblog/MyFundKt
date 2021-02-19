@@ -63,7 +63,7 @@ class FundInfoFragment : Fragment() {
         myViewModel.infomationCode.observe(requireActivity(), {
             Log.d(TAG, "onActivityCreated:code "+it)
                 it?.let {
-                    viewModel.initSellectionFund(it)
+                    viewModel.initSellectionFundCoro(it)
                 }
             })
 
@@ -71,21 +71,27 @@ class FundInfoFragment : Fragment() {
         // TODO: Use the ViewModel
 
         viewModel.data.observe(viewLifecycleOwner, {
+            it?.let { it1 ->
+                lineChart.setData(it1)
+            }
 
-            lineChart.setData(it)
 
         })
 
         viewModel.start.observe(viewLifecycleOwner, {
+            it?.let { it1->
+                lineChart.setMidStart(it1)
+            }
 
-            lineChart.setMidStart(it)
 
         })
 
         viewModel.expansion.observe(viewLifecycleOwner, {
-            it?.let {
-                (it.sHORTNAME+"("+it.fCODE+")").also { binding.fundTitle.text = it }
-            }
+                it?.let { it1->
+                    (it1.sHORTNAME+"("+it1.fCODE+")").also { binding.fundTitle.text = it }
+                }
+
+
         })
     }
 

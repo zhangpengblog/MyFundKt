@@ -19,6 +19,7 @@ import com.example.myfundkt.http.response.BottomsResponse
 import com.example.myfundkt.http.response.HolidayResponse
 import com.example.myfundkt.utils.MyLog
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.LocalTime
@@ -318,9 +319,9 @@ class MyViewModel : ViewModel() {
                 }
 
             }catch (e:Exception){
-                Log.e(TAG, "initSelectedFundCoro: ",e )
-            }
+                Log.e(TAG, "initSelectedFundCoro: ",e)
 
+            }
         }
     }
 
@@ -365,6 +366,7 @@ class MyViewModel : ViewModel() {
                         ) //
                     } else {
                         timer.cancel()
+                        this.cancel()
                     }
                 }
 

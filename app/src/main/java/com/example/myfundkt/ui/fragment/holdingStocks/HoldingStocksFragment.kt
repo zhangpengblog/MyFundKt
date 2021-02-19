@@ -63,8 +63,11 @@ private lateinit var binding: HoldingStocksFragmentBinding
         })
         //exist name
         fundInfoViewModel.expansion.observe(viewLifecycleOwner, Observer {
-            Log.d(TAG, "onActivityCreated:expansion "+it)
-            (it.sHORTNAME+"("+it.fCODE+")").also { binding.appCompatTextView.text = it }
+            it?.let { it1->
+                Log.d(TAG, "onActivityCreated:expansion "+it1)
+                (it1.sHORTNAME+"("+it1.fCODE+")").also { binding.appCompatTextView.text = it }
+            }
+
         })
         // TODO: Use the ViewModel
         viewModel.apply {
