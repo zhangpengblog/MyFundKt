@@ -8,13 +8,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.myfundkt.R
 import com.example.myfundkt.databinding.ImportDataFragmentBinding
+import com.example.myfundkt.db.DbRepository
 import com.example.myfundkt.ui.MyViewModel
 import com.example.myfundkt.utils.ToastUtil
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 private const val TAG = "ImportDataFragment"
 class ImportDataFragment : Fragment() {
@@ -43,7 +48,14 @@ private lateinit var binding: ImportDataFragmentBinding
                     ToastUtil.show("请粘贴内容")
                     return@setOnClickListener
                 }
-                importData(it)
+
+                    val repository = DbRepository()
+                    repository.ClearAll()
+                    importData(it)
+
+
+
+
             }
         }
     }
@@ -63,10 +75,11 @@ private lateinit var binding: ImportDataFragmentBinding
                 if (_count!=0 && _count==it){
                     view?.let { it1 ->
                         Snackbar.make(it1, "导入成功", Snackbar.LENGTH_SHORT).show()
-                        myViewModel.initSellectionFund()
+
                         val controller: NavController? = getView()?.let { Navigation.findNavController(it) }
                         if (controller != null) {
                             controller.navigate(R.id.action_importDataFragment_to_myFundFragment)
+                            myViewModel.initSellectionFund()
                         }
                     }
                 }

@@ -99,39 +99,42 @@ class MyViewModel : ViewModel() {
     }
 
     private fun setLiveCollection(b: Data, code: String): CollectionBean? {
+
         MyLog.d(TAG, "setLiveCollection: "+code)
         if(code.isNotEmpty()){
-            val entity: FoudInfoEntity = repository.FindByCode(code)
+            val entity: FoudInfoEntity? = repository.FindByCode(code)
+            entity?.let {
+                val 持有份额: Double = entity.quantity //持有份额
+                val 成本价: Double = entity.cost //成本价
+                val 昨日价: String = b.NAV //昨日价
+                val 估算涨跌: String = b.GSZZL//估算涨跌
+                val 代码 = b.FCODE
+                val 名称 = b.SHORTNAME
+                val 时间 = b.GZTIME.substring(IntRange(10,15))
+                val 涨跌幅: String = b.NAVCHGRT //涨跌幅
+                val 持有额 = getCye(昨日价, 持有份额) //持有额
+                val 持有收益 = getCysy(昨日价, 持有份额, 成本价) //持有收益
+                val 持有收益率 = getCysyl(昨日价, 成本价) //持有收益率
+                var 估算收益 ="" //估算收益
+                Log.d(TAG, "setLiveCollection: "+b.PDATE)
+                Log.d(TAG, "setLiveCollection:时间 "+时间)
 
-            val 持有份额: Double = entity.quantity //持有份额
-            val 成本价: Double = entity.cost //成本价
-            val 昨日价: String = b.NAV //昨日价
-            val 估算涨跌: String = b.GSZZL//估算涨跌
-            val 代码 = b.FCODE
-            val 名称 = b.SHORTNAME
-            val 时间 = b.GZTIME.substring(IntRange(10,15))
-            val 涨跌幅: String = b.NAVCHGRT //涨跌幅
-            val 持有额 = getCye(昨日价, 持有份额) //持有额
-            val 持有收益 = getCysy(昨日价, 持有份额, 成本价) //持有收益
-            val 持有收益率 = getCysyl(昨日价, 成本价) //持有收益率
-            var 估算收益 ="" //估算收益
-            Log.d(TAG, "setLiveCollection: "+b.PDATE)
-            Log.d(TAG, "setLiveCollection:时间 "+时间)
+                var 涨跌 = ""
+                if (b.PDATE .equals(时间)){//已结算
+                    Log.d(TAG, "setLiveCollection: 已结算")
+                    估算收益 =getGssy(涨跌幅, 持有份额, 昨日价)
+                    涨跌=涨跌幅
+                }else{
+                    Log.d(TAG, "setLiveCollection: 未结算")
+                    估算收益 = getGssy(估算涨跌, 持有份额, 昨日价)
+                    涨跌=估算涨跌
+                }
 
-            var 涨跌 = ""
-            if (b.PDATE .equals(时间)){//已结算
-                Log.d(TAG, "setLiveCollection: 已结算")
-                估算收益 =getGssy(涨跌幅, 持有份额, 昨日价)
-                涨跌=涨跌幅
-            }else{
-                Log.d(TAG, "setLiveCollection: 未结算")
-                估算收益 = getGssy(估算涨跌, 持有份额, 昨日价)
-                涨跌=估算涨跌
+                val bean = CollectionBean(代码,名称,String.format("%.2f", 持有份额),持有额,持有收益,持有收益率+"%",
+                    涨跌+"%",估算收益,时间)
+                return bean
             }
 
-            val bean = CollectionBean(代码,名称,String.format("%.2f", 持有份额),持有额,持有收益,持有收益率+"%",
-                涨跌+"%",估算收益,时间)
-            return bean
 
         }
         return null

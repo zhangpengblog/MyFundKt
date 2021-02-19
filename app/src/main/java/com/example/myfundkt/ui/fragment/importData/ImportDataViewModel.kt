@@ -37,7 +37,6 @@ class ImportDataViewModel : ViewModel() {
             }
         }catch (e: Exception){
             Log.e("ImportDataViewModel", "fromImport: ",e )
-            ToastUtil.show("格式错误")
         }
 
     }
