@@ -15,6 +15,8 @@ import com.example.myfundkt.http.response.BottomsResponse
 import com.example.myfundkt.http.response.HolidayResponse
 import com.example.myfundkt.http.response.QtResponse
 import com.example.myfundkt.utils.MyLog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.time.LocalTime
@@ -46,6 +48,7 @@ class MyViewModel : ViewModel() {
     }
 
     fun initCode(){
+
         codes.clear()
         codes.addAll(repository.GetCodes())
         _progressBarVisibility.value = View.VISIBLE
@@ -53,22 +56,25 @@ class MyViewModel : ViewModel() {
 
 
     fun initIndexFund() {
-        object : QtResponse(
-            GetRetrofit.getPush2().create(Api::class.java).getQT(getExponentMap())
-        ) {
-            override fun onSuccess(total: Int, diffBeanList: List<Diff>) {
-                if (codes.size.equals(0)){
-                    _progressBarVisibility.value = View.GONE
+        viewModelScope.launch(Dispatchers.IO) {
+            object : QtResponse(
+                GetRetrofit.getPush2().create(Api::class.java).getQT(getExponentMap())
+            ) {
+                override fun onSuccess(total: Int, diffBeanList: List<Diff>) {
+                    if (codes.size == 0){
+                        _progressBarVisibility.value = View.GONE
+                    }
+                    _topLiveData.value = diffBeanList
                 }
-                _topLiveData.value = diffBeanList
             }
         }
+
     }
 
     //转换模型
     fun setSelectionData(data: List<Data>) {
         _selectionData.value = data
-        if (data.size > 0) {
+        if (data.isNotEmpty()) {
             val list: MutableList<CollectionBean> = ArrayList()
             for (b in data) {
                 val code: String = b.FCODE
@@ -108,7 +114,7 @@ class MyViewModel : ViewModel() {
             val 持有额 = getCye(昨日价, 持有份额) //持有额
             val 持有收益 = getCysy(昨日价, 持有份额, 成本价) //持有收益
             val 持有收益率 = getCysyl(昨日价, 成本价) //持有收益率
-            var 估算收益:String="" //估算收益
+            var 估算收益 ="" //估算收益
             Log.d(TAG, "setLiveCollection: "+b.PDATE)
             Log.d(TAG, "setLiveCollection:时间 "+时间)
 
@@ -126,7 +132,7 @@ class MyViewModel : ViewModel() {
             val bean = CollectionBean(代码,名称,String.format("%.2f", 持有份额),持有额,持有收益,持有收益率+"%",
                 涨跌+"%",估算收益,时间)
             return bean
-            return null
+
         }
         return null
 
@@ -243,23 +249,26 @@ class MyViewModel : ViewModel() {
     }
 
     fun initSellectionFund() {
-        object : BottomsResponse(
-            GetRetrofit.getFundmobapi().create(Api::class.java).getBottoms(
-                getSellectionMap()
-            )
-        ){
-            override fun onError() {
+        viewModelScope.launch(Dispatchers.IO) {
+            object : BottomsResponse(
+                GetRetrofit.getFundmobapi().create(Api::class.java).getBottoms(
+                    getSellectionMap()
+                )
+            ){
+                override fun onError() {
 
-            }
-
-            override fun onSuccess(it: List<Data>){
-                _progressBarVisibility.value = View.GONE
-                it.let {
-                    setSelectionData(it)
                 }
 
+                override fun onSuccess(it: List<Data>){
+                    _progressBarVisibility.value = View.GONE
+                    it.let {
+                        setSelectionData(it)
+                    }
+
+                }
             }
         }
+
     }
 
     fun getHoliday() {
@@ -268,7 +277,7 @@ class MyViewModel : ViewModel() {
         MyLog.d(TAG, "today: $today")
         object : HolidayResponse(
             GetRetrofit.getDate().create(Api::class.java)
-                .getHoliday("https://timor.tech/api/holiday/info/" + today)
+                .getHoliday("https://timor.tech/api/holiday/info/$today")
         ) {
             override fun holiday() {
                 MyLog.d(
@@ -278,33 +287,37 @@ class MyViewModel : ViewModel() {
             }
 
             override fun workDay() {
-                MyLog.d(TAG, "Redo: " + LocalTime.now())
-//                val timer = Timer()
-//                if (LocalTime.now().isAfter(LocalTime.of(9, 30)) && LocalTime.now().isBefore(
-//                        LocalTime.of(15, 0)
-//                    )) {
-//                    MyLog.d(TAG, "Redo:2")
-//                    val timerTask: TimerTask = object : TimerTask() {
-//                        override fun run() {
-//                            MyLog.d(TAG, "Redo: ")
-//                            initIndexFund()
-//                            initSellectionFund()
-//                            MyLog.d(
-//                                TAG,
-//                                "TimerTask: " + Date().time
-//                            )
-//                        }
-//                    }
-//                    timer.schedule(
-//                        timerTask,
-//                        10000,  //延迟10秒执行
-//                        10000
-//                    ) //
-//                } else {
-//                    timer.cancel()
-//                }
+                viewModelScope.launch(Dispatchers.IO) {
+                    MyLog.d(TAG, "Redo: " + LocalTime.now())
+                    val timer = Timer()
+                    if (LocalTime.now().isAfter(LocalTime.of(9, 30)) && LocalTime.now().isBefore(
+                            LocalTime.of(15, 0)
+                        )) {
+                        MyLog.d(TAG, "Redo:2")
+                        val timerTask: TimerTask = object : TimerTask() {
+                            override fun run() {
+                                MyLog.d(TAG, "Redo: ")
+                                initIndexFund()
+                                initSellectionFund()
+                                MyLog.d(
+                                    TAG,
+                                    "TimerTask: " + Date().time
+                                )
+                            }
+                        }
+                        timer.schedule(
+                            timerTask,
+                            60000,  //延迟10秒执行
+                            60000
+                        ) //
+                    } else {
+                        timer.cancel()
+                    }
+                }
+
 
             }
+
         }
     }
 
