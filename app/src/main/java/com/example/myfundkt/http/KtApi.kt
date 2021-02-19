@@ -1,8 +1,11 @@
 package com.example.myfundkt.http
 
+import com.example.myfundkt.bean.holdingStocks.HoldingStocksBean
 import com.example.myfundkt.bean.information.InformationData
 import com.example.myfundkt.bean.selection.SelectionBean
 import com.example.myfundkt.bean.top.TopBean
+import okhttp3.ResponseBody
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -25,4 +28,17 @@ interface KtApi {
         @Query("version") version: String?,
         @Query("_") _ex: String?
     ): Response<InformationData>
+
+
+    //持仓
+    @GET("FundMNewApi/FundMNInverstPosition")
+   suspend fun getHoldingStocks(
+        @Query("FCODE") FCODE: String?,
+        @Query("deviceid") deviceid: String?,
+        @Query("plat") plat: String?,
+        @Query("product") product: String?,
+        @Query("version") version: String?,
+        @Query("Uid") Uid: String?,
+        @Query("_") ex_: String?
+    ): Response<HoldingStocksBean>
 }

@@ -22,9 +22,6 @@ import com.example.myfundkt.ui.fragment.information.FundInfoViewModel
 private const val TAG = "HoldingStocksFragment"
 class HoldingStocksFragment : Fragment() {
 private lateinit var binding: HoldingStocksFragmentBinding
-    companion object {
-        fun newInstance() = HoldingStocksFragment()
-    }
 
     private lateinit var viewModel: HoldingStocksViewModel
     private val list:MutableList<HoldingData> = mutableListOf()
@@ -57,12 +54,12 @@ private lateinit var binding: HoldingStocksFragmentBinding
         // get code
         myViewModel.infomationCode.observe(requireActivity(), {
             Log.d(TAG, "onActivityCreated:code "+it)
-            it?.let {
-                viewModel.getStocks(it)
-            }
+                viewModel.getStocksCoro(it)
+
         })
         //exist name
         fundInfoViewModel.expansion.observe(viewLifecycleOwner, Observer {
+            binding.appCompatTextView.text = ""
             it?.let { it1->
                 Log.d(TAG, "onActivityCreated:expansion "+it1)
                 (it1.sHORTNAME+"("+it1.fCODE+")").also { binding.appCompatTextView.text = it }
@@ -73,12 +70,14 @@ private lateinit var binding: HoldingStocksFragmentBinding
         viewModel.apply {
 
             holdingData.observe(viewLifecycleOwner, Observer {
+
                 it?.let {
                     Log.d(TAG, "onActivityCreated:holdingData "+it)
                     list.clear()
                     list.addAll(it)
                     adapter.notifyDataSetChanged()
                 }
+
             })
         }
     }

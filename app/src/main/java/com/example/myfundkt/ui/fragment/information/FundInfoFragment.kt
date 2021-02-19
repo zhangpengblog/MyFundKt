@@ -15,9 +15,10 @@ import com.example.myfundkt.ui.lineChart.LineChart
 
 private const val TAG = "FundInfoFragment"
 private lateinit var lineChart: LineChart
-private lateinit var binding: FundInfoFragmentBinding
+
 class FundInfoFragment : Fragment() {
     private lateinit var myViewModel: MyViewModel
+    private lateinit var binding: FundInfoFragmentBinding
 //    companion object {
 //        fun newInstance() = FundInfoFragment()
 //    }
@@ -87,6 +88,7 @@ class FundInfoFragment : Fragment() {
         })
 
         viewModel.expansion.observe(viewLifecycleOwner, {
+            binding.fundTitle.text = ""
                 it?.let { it1->
                     (it1.sHORTNAME+"("+it1.fCODE+")").also { binding.fundTitle.text = it }
                 }
