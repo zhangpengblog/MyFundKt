@@ -1,14 +1,18 @@
 package com.example.myfundkt;
 
 import android.app.Application;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.elvishew.xlog.LogConfiguration;
 import com.elvishew.xlog.LogLevel;
 import com.elvishew.xlog.XLog;
 import com.example.myfundkt.utils.Conteaxt;
 
+import org.jetbrains.annotations.NotNull;
+
 public class MyApplication extends Application {
-    private final static boolean isDebugARouter = BuildConfig.DEBUG;
 
     @Override
     public void onCreate() {
@@ -20,5 +24,12 @@ public class MyApplication extends Application {
                 .tag ("BeeGame")                                         // 指定 TAG，默认为 "X-LOG"
                 .build ();
         XLog.init (config);
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(@NonNull @NotNull Thread t, @NonNull @NotNull Throwable e) {
+                Log.e("MyApplication", "uncaughtException: "+t.getName()+e.getMessage() );
+                Log.e("MyApplication", "uncaughtException: ",e );
+            }
+        });
     }
 }
