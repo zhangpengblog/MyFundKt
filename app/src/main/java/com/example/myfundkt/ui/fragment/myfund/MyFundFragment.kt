@@ -14,6 +14,7 @@ import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,11 +27,14 @@ import com.example.myfundkt.bean.CollectionBean
 import com.example.myfundkt.bean.top.Diff
 import com.example.myfundkt.databinding.FragmentMyFundBinding
 import com.example.myfundkt.db.DbRepository
+import com.example.myfundkt.db.KtDatabase
+import com.example.myfundkt.db.dao.FoudInfoDao
 import com.example.myfundkt.db.entity.FoudInfoEntity
 import com.example.myfundkt.ui.MyViewModel
 import com.example.myfundkt.utils.MyLog
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.*
 
 
 private const val TAG = "MyFundFragment"
@@ -136,24 +140,39 @@ class MyFundFragment : Fragment() {
                 view: View,
                 position: Int
             ): Boolean {
-                val fund = selectionData[position]
-                val code = fund.代码
-                val repository = DbRepository()
-                val entity = repository.FindByCode(code)
-                val id = entity.id
-                 activity?.let {
-                    AlertDialog.Builder(it).setMessage("删除").setPositiveButton("删除",
-                        DialogInterface.OnClickListener { dialogInterface, i ->
-                            repository.DeleteById(id)
-                            selectionAdapter.removeAt(position)
-                            selectionAdapter.notifyDataSetChanged()
-                        })
-                }?.setNegativeButton("取消", null)
-                    ?.create()?.show()
+
+                delete(position)
                 return true
             }
+
         })
 
+
+    }
+
+    private fun delete(position:Int){
+        val fund = selectionData[position]
+        val code = fund.代码
+        lifecycleScope.launch{
+            val ktDao=KtDatabase.dataBase.getDao()
+            val entity=ktDao.FindByCode(code?:"0")
+            val id = entity?.id
+            activity?.let {
+                AlertDialog.Builder(it).setMessage("删除").setPositiveButton("删除",
+                    DialogInterface.OnClickListener { dialogInterface, i ->
+                        lifecycleScope.launch {
+                            if (id != null) {
+                                ktDao.deleteById(id)
+                                selectionAdapter.removeAt(position)
+                                selectionAdapter.notifyDataSetChanged()
+                            }
+                        }
+
+                    })
+            }?.setNegativeButton("取消", null)
+                ?.create()?.show()
+
+        }
 
     }
 
@@ -175,9 +194,9 @@ class MyFundFragment : Fragment() {
         myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java).apply {
 
 //            initIndexFund()
-            initFundCoro()
-            initSelectedFundCoro()
-            getHoliday()
+//            initFundCoro()
+//            initSelectedFundCoro()
+//            getHoliday()
 
             progressBarVisibility.observe(viewLifecycleOwner, {
                 binding.progressBar.visibility = it
@@ -334,20 +353,36 @@ class MyFundFragment : Fragment() {
                 val cost = s2.toDouble()
                 val quantity = s3.toDouble()
                 val foudInfoEntity = FoudInfoEntity(s1, quantity, cost)
-                val repository = DbRepository()
-                var amount = 0
-                val codes: List<String> = repository.GetCodes()
-                if (codes.isNotEmpty()) {
-                    amount = codes.size
-                }
-                repository.InsertInfo(foudInfoEntity)
-                if (amount == repository.GetCodes().size) {
-                    Snackbar.make(requireView(), "添加失败", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show()
-                } else {
-                    Snackbar.make(requireView(), "添加成功", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show()
-                    dialog.dismiss()
+//                val repository = DbRepository()
+//                var amount = 0
+//                val codes: List<String> = repository.GetCodes()
+//                if (codes.isNotEmpty()) {
+//                    amount = codes.size
+//                }
+//                repository.InsertInfo(foudInfoEntity)
+//                if (amount == repository.GetCodes().size) {
+//                    Snackbar.make(requireView(), "添加失败", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show()
+//                } else {
+//                    Snackbar.make(requireView(), "添加成功", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show()
+//                    dialog.dismiss()
+//                }
+                val foudInfoDao=KtDatabase.dataBase.getDao()
+                lifecycleScope.launch(Dispatchers.IO){
+                    with(foudInfoDao){
+                       val amount= getCodes()?.size
+                        insertFoudInfo(foudInfoEntity)
+                        if (amount == getCodes()?.size) {
+                            Snackbar.make(requireView(), "添加失败", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show()
+                        } else {
+                            Snackbar.make(requireView(), "添加成功", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show()
+                            dialog.dismiss()
+                        }
+                    }
+
                 }
             }
         }

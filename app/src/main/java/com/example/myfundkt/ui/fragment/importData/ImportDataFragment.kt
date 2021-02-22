@@ -7,14 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.myfundkt.R
 import com.example.myfundkt.databinding.ImportDataFragmentBinding
 import com.example.myfundkt.db.DbRepository
+import com.example.myfundkt.db.KtDatabase
 import com.example.myfundkt.ui.MyViewModel
 import com.example.myfundkt.utils.ToastUtil
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 
 private const val TAG = "ImportDataFragment"
 class ImportDataFragment : Fragment() {
@@ -43,10 +46,14 @@ private lateinit var binding: ImportDataFragmentBinding
                     return@setOnClickListener
                 }
 
-                    val repository = DbRepository()
-                    repository.ClearAll()
+//                    val repository = DbRepository()
+//                    repository.ClearAll()
+//                    importData(it)
+                lifecycleScope.launch {
+                    val ktDao = KtDatabase.dataBase.getDao()
+                    ktDao.clear()
                     importData(it)
-
+                }
 
 
 

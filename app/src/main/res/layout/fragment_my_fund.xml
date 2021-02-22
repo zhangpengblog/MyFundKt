@@ -179,7 +179,8 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/roundRelativeLayout"
-                        tools:listitem="@layout/item_my_fund" />
+                        app:layout_constraintVertical_bias="0.0"
+                        tools:listitem="@layout/item_my_fund"/>
 
                     <ProgressBar
                         android:id="@+id/progressBar"
@@ -204,7 +205,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:alpha="0.5"
-        android:src="@drawable/ic_baseline_add_24"
-        app:fabSize="mini" />
+        android:alpha="0.8"
+        android:src="@drawable/ic_baseline_add_24" />
 </FrameLayout>

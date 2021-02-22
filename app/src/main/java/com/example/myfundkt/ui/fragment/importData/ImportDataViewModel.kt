@@ -4,10 +4,14 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.myfundkt.bean.importData.ImportDataBean
 import com.example.myfundkt.db.DbRepository
+import com.example.myfundkt.db.KtDatabase
 import com.example.myfundkt.db.entity.FoudInfoEntity
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ImportDataViewModel : ViewModel() {
     // TODO: Implement the ViewModel
@@ -30,7 +34,11 @@ class ImportDataViewModel : ViewModel() {
                         FoudInfoEntity(it.code,num,
                             it1.toDouble())
                     }
-                    repository.InsertInfo(fundEntity)
+                    viewModelScope.launch(Dispatchers.IO){
+                        val foudInfoDao= KtDatabase.dataBase.getDao()
+                        foudInfoDao.insertFoudInfo(fundEntity)
+                    }
+//                    repository.InsertInfo(fundEntity)
                 }
             }
         }catch (e: Exception){

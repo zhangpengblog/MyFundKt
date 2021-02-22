@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.SplashActivity">
+    <FrameLayout
+        android:id="@+id/flash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/purple_200">
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="自选基金助手"
+            android:layout_gravity="center"
+            android:textSize="40sp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/skip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:text="skip"/>
+    </FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

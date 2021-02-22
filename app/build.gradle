@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -14,8 +15,8 @@ android {
         applicationId "com.example.myfundkt"
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode 4
-        versionName "1.6"
+        versionCode 5
+        versionName "1.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -45,7 +46,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.2'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.2'
@@ -53,6 +54,9 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-beta01'
     implementation 'androidx.lifecycle:lifecycle-livedata-core-ktx:2.3.0-beta01'
     implementation 'androidx.room:room-runtime:2.2.5'
+    annotationProcessor 'androidx.room:room-compiler:2.2.5'
+    implementation 'androidx.room:room-ktx:2.2.5'
+    kapt "androidx.room:room-compiler:2.2.5"
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.0-beta01'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
     testImplementation 'junit:junit:4.+'
@@ -71,7 +75,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'org.xutils:xutils:3.9.0'
     implementation 'cn.yc:YCStatusBarLib:1.4.3'
-    annotationProcessor 'androidx.room:room-compiler:2.2.5'
+
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1"
 

@@ -15,4 +15,8 @@
         <item name="backGroundColor">@color/white</item>
 
     </style>
+    <style name="fullScreen" parent="Theme.MyFundKt">
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
 </resources>

@@ -11,6 +11,7 @@ import com.example.myfundkt.bean.CollectionBean
 import com.example.myfundkt.bean.selection.Data
 import com.example.myfundkt.bean.top.Diff
 import com.example.myfundkt.db.DbRepository
+import com.example.myfundkt.db.KtDatabase
 import com.example.myfundkt.db.entity.FoudInfoEntity
 import com.example.myfundkt.http.Api
 import com.example.myfundkt.http.GetRetrofit
@@ -19,6 +20,7 @@ import com.example.myfundkt.http.response.BottomsResponse
 import com.example.myfundkt.http.response.HolidayResponse
 import com.example.myfundkt.utils.MyLog
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -36,7 +38,7 @@ private const val TAG = "MyViewModel"
 class MyViewModel : ViewModel() {
     private val _topLiveData = MutableLiveData(listOf<Diff>())
     val topLiveData: LiveData<List<Diff>> = _topLiveData
-    private var codes: MutableList<String> = mutableListOf()
+    private var codes: List<String> = mutableListOf()
 
     private val _selectionData = MutableLiveData(listOf<Data>())
     val selectionLiveData: LiveData<List<Data>> = _selectionData
@@ -57,10 +59,19 @@ class MyViewModel : ViewModel() {
     }
 
     fun initCode(){
-
-        codes.clear()
-        codes.addAll(repository.GetCodes())
         _progressBarVisibility.value = View.VISIBLE
+        initFundCoro()
+        getHoliday()
+        codes= emptyList()
+//        codes.addAll(repository.GetCodes())
+        viewModelScope.launch {
+            val ktDao = KtDatabase.dataBase.getDao()
+            ktDao.getCodes()?.let {
+                Log.d(TAG, "initCode: "+it)
+                codes=it
+                initSelectedFundCoro()
+            }
+        }
     }
 
 
@@ -91,7 +102,7 @@ class MyViewModel : ViewModel() {
                         val diffBeanList: List<Diff> = it.data.diff
                         Log.d(TAG, "initFundCoro: $diffBeanList")
                         if (codes.size == 0) {
-                            _progressBarVisibility.value = View.GONE
+                            _progressBarVisibility.postValue(View.GONE)
                         }
                         _topLiveData.postValue(diffBeanList)
                     }
@@ -103,7 +114,7 @@ class MyViewModel : ViewModel() {
     }
 
     //转换模型
-    private fun setSelectionData(data: List<Data>) {
+    private suspend fun setSelectionData(data: List<Data>) {
         _selectionData.postValue(data)
         if (data.isNotEmpty()) {
             val list: MutableList<CollectionBean> = ArrayList()
@@ -122,6 +133,7 @@ class MyViewModel : ViewModel() {
                     list.add(bean)
                 }
             }
+            Log.d(TAG, "setSelectionData: "+list)
             _collection.postValue(null)
             _collection.postValue(list)
 
@@ -129,44 +141,50 @@ class MyViewModel : ViewModel() {
         }
     }
 
-    private fun setLiveCollection(b: Data, code: String): CollectionBean? {
+    private suspend fun setLiveCollection(b: Data, code: String): CollectionBean? {
 
         MyLog.d(TAG, "setLiveCollection: "+code)
         if(code.isNotEmpty()){
-            val entity: FoudInfoEntity? = repository.FindByCode(code)
-            entity?.let {
-                val 持有份额: Double = entity.quantity //持有份额
-                val 成本价: Double = entity.cost //成本价
-                val 昨日价: String = b.NAV //昨日价
-                val 估算涨跌: String = b.GSZZL//估算涨跌
-                val 代码 = b.FCODE
-                val 名称 = b.SHORTNAME
-                val 时间 = b.GZTIME.substring(IntRange(10,15))
-                val 涨跌幅: String = b.NAVCHGRT //涨跌幅
-                val 持有额 = getCye(昨日价, 持有份额) //持有额
-                val 持有收益 = getCysy(昨日价, 持有份额, 成本价) //持有收益
-                val 持有收益率 = getCysyl(昨日价, 成本价) //持有收益率
-                var 估算收益 ="" //估算收益
-                Log.d(TAG, "setLiveCollection: "+b.PDATE)
-                Log.d(TAG, "setLiveCollection:时间 "+时间)
+            var entity: FoudInfoEntity? =null
+            val collectionBean = viewModelScope.async{
+                val foudInfoDao= KtDatabase.dataBase.getDao()
+                entity= foudInfoDao.FindByCode(code)
+                Log.d(TAG, "setLiveCollection:FindByCode "+ (entity?.code ?: 0))
+                entity?.let {
+                    val 持有份额: Double = entity!!.quantity //持有份额
+                    val 成本价: Double = entity!!.cost //成本价
+                    val 昨日价: String = b.NAV //昨日价
+                    val 估算涨跌: String = b.GSZZL//估算涨跌
+                    val 代码 = b.FCODE
+                    val 名称 = b.SHORTNAME
+                    val 时间 = b.GZTIME.substring(IntRange(10,15))
+                    val 涨跌幅: String = b.NAVCHGRT //涨跌幅
+                    val 持有额 = getCye(昨日价, 持有份额) //持有额
+                    val 持有收益 = getCysy(昨日价, 持有份额, 成本价) //持有收益
+                    val 持有收益率 = getCysyl(昨日价, 成本价) //持有收益率
+                    var 估算收益 ="" //估算收益
+                    Log.d(TAG, "setLiveCollection: "+b.PDATE)
+                    Log.d(TAG, "setLiveCollection:时间 "+时间)
 
-                var 涨跌 = ""
-                var updated =false
-                if (b.PDATE .equals(b.GZTIME.substring(IntRange(0,9)))){//已结算
-                    Log.d(TAG, "setLiveCollection: 已结算")
-                    估算收益 =getGssy(涨跌幅, 持有份额, 昨日价)
-                    涨跌=涨跌幅
-                    updated = true
-                }else{
-                    Log.d(TAG, "setLiveCollection: 未结算")
-                    估算收益 = getGssy(估算涨跌, 持有份额, 昨日价)
-                    涨跌=估算涨跌
+                    var 涨跌 = ""
+                    var updated =false
+                    if (b.PDATE .equals(b.GZTIME.substring(IntRange(0,9)))){//已结算
+                        Log.d(TAG, "setLiveCollection: 已结算")
+                        估算收益 =getGssy(涨跌幅, 持有份额, 昨日价)
+                        涨跌=涨跌幅
+                        updated = true
+                    }else{
+                        Log.d(TAG, "setLiveCollection: 未结算")
+                        估算收益 = getGssy(估算涨跌, 持有份额, 昨日价)
+                        涨跌=估算涨跌
+                    }
+
+                    val bean = CollectionBean(代码,名称,String.format("%.2f", 持有份额),持有额,持有收益,持有收益率+"%",
+                        涨跌+"%",估算收益,时间,updated)
+                    return@async bean
                 }
-
-                val bean = CollectionBean(代码,名称,String.format("%.2f", 持有份额),持有额,持有收益,持有收益率+"%",
-                    涨跌+"%",估算收益,时间,updated)
-                return bean
             }
+            return collectionBean.await()
 
 
         }
@@ -184,6 +202,7 @@ class MyViewModel : ViewModel() {
     }
 
     fun getSellectionMap(): HashMap<String, String> {
+        Log.d(TAG, "getSellectionMap: "+codes)
         val map =
             HashMap<String, String>()
         map["pageIndex"] = "1"
@@ -194,6 +213,7 @@ class MyViewModel : ViewModel() {
         map["Version"] = "1"
         map["deviceid"] = "ee11bd80-fa55-417d-b155-9eb08fc131ed"
         map["Fcodes"] = formatCode(codes)
+        Log.d(TAG, "formatCode: "+ map["Fcodes"])
         return map
 
     }
@@ -316,7 +336,8 @@ class MyViewModel : ViewModel() {
                 if (response.isSuccessful){
                     val selectionBean =response.body()
                     selectionBean?.let {
-                        it.Datas?.let { it1 -> setSelectionData(it1) }
+                        it.Datas?.let { it1 -> setSelectionData(it1)
+                            Log.d(TAG, "initSelectedFundCoro: "+it1.size)}
                     }
                 }
 
