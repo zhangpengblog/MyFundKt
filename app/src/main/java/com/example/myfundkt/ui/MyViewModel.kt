@@ -3,20 +3,15 @@ package com.example.myfundkt.ui
 import android.annotation.SuppressLint
 import android.util.Log
 import android.view.View
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.myfundkt.bean.CollectionBean
 import com.example.myfundkt.bean.selection.Data
 import com.example.myfundkt.bean.top.Diff
-import com.example.myfundkt.db.DbRepository
 import com.example.myfundkt.db.KtDatabase
 import com.example.myfundkt.db.entity.FoudInfoEntity
 import com.example.myfundkt.http.Api
 import com.example.myfundkt.http.GetRetrofit
 import com.example.myfundkt.http.KtApi
-import com.example.myfundkt.http.response.BottomsResponse
 import com.example.myfundkt.http.response.HolidayResponse
 import com.example.myfundkt.utils.MyLog
 import kotlinx.coroutines.Dispatchers
@@ -26,16 +21,15 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.util.*
-import kotlin.collections.List
-import kotlin.collections.MutableList
-import kotlin.collections.isNotEmpty
-import kotlin.collections.listOf
-import kotlin.collections.mutableListOf
 import kotlin.collections.set
 
 private const val TAG = "MyViewModel"
 
 class MyViewModel : ViewModel() {
+
+
+
+
     private val _topLiveData = MutableLiveData(listOf<Diff>())
     val topLiveData: LiveData<List<Diff>> = _topLiveData
     private var codes: List<String> = mutableListOf()
@@ -45,7 +39,6 @@ class MyViewModel : ViewModel() {
 
     private val _collection = MutableLiveData(listOf<CollectionBean>())
     val collection: LiveData<List<CollectionBean>> = _collection
-    private var repository: DbRepository = DbRepository()
 
     val infomationCode = MutableLiveData<String?>()
 
@@ -57,6 +50,7 @@ class MyViewModel : ViewModel() {
     init {
         initCode()
     }
+
 
     fun initCode(){
         _progressBarVisibility.value = View.VISIBLE
@@ -170,7 +164,7 @@ class MyViewModel : ViewModel() {
                     var updated =false
                     if (b.PDATE .equals(b.GZTIME.substring(IntRange(0,9)))){//已结算
                         Log.d(TAG, "setLiveCollection: 已结算")
-                        估算收益 =getGssy(涨跌幅, 持有份额, 昨日价)
+                        估算收益 =getSy(涨跌幅, 持有份额, 昨日价)
                         涨跌=涨跌幅
                         updated = true
                     }else{
@@ -302,6 +296,33 @@ class MyViewModel : ViewModel() {
             return ""
         }
 
+    }
+
+    /**
+     * 实际收益=【(今日价/(1+涨跌幅))-今日价】*持有额
+     *    =[-(涨跌幅)/(1+涨跌幅)]*今日价*持有额
+     * @param gszzl    涨跌幅
+     * @param quantity 持有额
+     * @param today 今日价
+     * @return 估算收益
+     */
+
+    private fun getSy(gszzl: String, quantity: Double, nav: String):String{
+        try {
+            if (gszzl == "--") {
+                return "0.0"
+            }
+            val today = nav.toDouble()
+            var gszdf = gszzl.toDouble()
+            MyLog.d(TAG, "zdf: $gszdf")
+            gszdf *= 0.01
+            val res =  quantity*(today-(today/(1+gszdf)))
+            MyLog.d(TAG, "getGssy: $res")
+            return String.format("%.2f", res)
+        }catch (e: Exception){
+            MyLog.e(TAG,"getGssy"+e.message)
+            return ""
+        }
     }
 
 //    fun initSellectionFund() {

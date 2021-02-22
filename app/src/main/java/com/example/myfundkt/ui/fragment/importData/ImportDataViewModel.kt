@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myfundkt.bean.importData.ImportDataBean
-import com.example.myfundkt.db.DbRepository
 import com.example.myfundkt.db.KtDatabase
 import com.example.myfundkt.db.entity.FoudInfoEntity
 import com.google.gson.Gson
@@ -15,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class ImportDataViewModel : ViewModel() {
     // TODO: Implement the ViewModel
-    private var repository: DbRepository = DbRepository()
+
      var _count : Int = 0
     private val _nowIndex = MutableLiveData(0)
     val nowIndex: LiveData<Int> = _nowIndex

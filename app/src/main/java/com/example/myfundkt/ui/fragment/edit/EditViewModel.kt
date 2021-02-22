@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class EditViewModel : ViewModel() {
     // TODO: Implement the ViewModel
-    private var repository: DbRepository = DbRepository()
+
     private val _foudInfoEntity = MutableLiveData<FoudInfoEntity>()
      val foudInfoEntity : LiveData<FoudInfoEntity> = _foudInfoEntity
 

@@ -12,12 +12,9 @@ import androidx.navigation.Navigation
 import com.example.myfundkt.R
 import com.example.myfundkt.utils.MyLog
 import com.google.android.material.tabs.TabLayout
-import kotlinx.android.synthetic.main.fragment_pages.*
-import kotlinx.android.synthetic.main.fragment_pages.view.*
 
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
 
 private const val TAG = "PagesFragment"
 class PagesFragment : Fragment() {

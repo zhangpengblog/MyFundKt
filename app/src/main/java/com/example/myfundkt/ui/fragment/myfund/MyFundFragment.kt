@@ -1,7 +1,6 @@
 package com.example.myfundkt.ui.fragment.myfund
 
 import android.annotation.SuppressLint
-import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -26,15 +25,14 @@ import com.example.myfundkt.adapter.TopAdapter
 import com.example.myfundkt.bean.CollectionBean
 import com.example.myfundkt.bean.top.Diff
 import com.example.myfundkt.databinding.FragmentMyFundBinding
-import com.example.myfundkt.db.DbRepository
 import com.example.myfundkt.db.KtDatabase
-import com.example.myfundkt.db.dao.FoudInfoDao
 import com.example.myfundkt.db.entity.FoudInfoEntity
 import com.example.myfundkt.ui.MyViewModel
 import com.example.myfundkt.utils.MyLog
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 private const val TAG = "MyFundFragment"
@@ -46,6 +44,7 @@ private val selectionData = mutableListOf<CollectionBean>()
 
 class MyFundFragment : Fragment() {
     private lateinit var myViewModel: MyViewModel
+
     private  lateinit var binding: FragmentMyFundBinding
     private var topAdapter: TopAdapter = TopAdapter(topData)
     private var selectionAdapter: SelectionAdapter = SelectionAdapter(selectionData)
@@ -158,17 +157,17 @@ class MyFundFragment : Fragment() {
             val entity=ktDao.FindByCode(code?:"0")
             val id = entity?.id
             activity?.let {
-                AlertDialog.Builder(it).setMessage("删除").setPositiveButton("删除",
-                    DialogInterface.OnClickListener { dialogInterface, i ->
-                        lifecycleScope.launch {
-                            if (id != null) {
-                                ktDao.deleteById(id)
-                                selectionAdapter.removeAt(position)
-                                selectionAdapter.notifyDataSetChanged()
-                            }
+                AlertDialog.Builder(it).setMessage("删除").setPositiveButton("删除"
+                ) { _, _ ->
+                    lifecycleScope.launch {
+                        if (id != null) {
+                            ktDao.deleteById(id)
+                            selectionAdapter.removeAt(position)
+                            selectionAdapter.notifyDataSetChanged()
                         }
+                    }
 
-                    })
+                }
             }?.setNegativeButton("取消", null)
                 ?.create()?.show()
 
@@ -292,40 +291,6 @@ class MyFundFragment : Fragment() {
     }
 
 
-//    var x1 = 0f
-//    var y1 = 0f
-//    var x2 = 0f
-//    var y2 = 0f
-//    override fun onTouchEvent(event: MotionEvent?): Boolean {
-//        //继承了Activity的onTouchEvent方法，直接监听点击事件
-//        if (event != null) {
-//            if(event.getAction() == MotionEvent.ACTION_DOWN) {
-//                //当手指按下的时候
-//                x1 = event.getX();
-//                y1 = event.getY();
-//            }
-//        }
-//        if (event != null) {
-//            if(event.getAction() == MotionEvent.ACTION_UP) {
-//                //当手指离开的时候
-//                x2 = event.getX();
-//                y2 = event.getY();
-//                if(y1 - y2 > 50) {
-//                    Toast.makeText(requireContext(), "向上滑", Toast.LENGTH_SHORT).show();
-//                } else if(y2 - y1 > 50) {
-//                    Toast.makeText(requireContext(), "向下滑", Toast.LENGTH_SHORT).show();
-//                } else if(x1 - x2 > 50) {
-//                    Toast.makeText(requireContext(), "向左滑", Toast.LENGTH_SHORT).show();
-//                } else if(x2 - x1 > 50) {
-//                    Toast.makeText(requireContext(), "向右滑", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        }
-//        return super.onTouchEvent(event)
-//
-//    }
-//
-
 
     fun showAddDialog() {
         /* @setView 装入自定义View ==> R.layout.dialog_customize
@@ -353,23 +318,9 @@ class MyFundFragment : Fragment() {
                 val cost = s2.toDouble()
                 val quantity = s3.toDouble()
                 val foudInfoEntity = FoudInfoEntity(s1, quantity, cost)
-//                val repository = DbRepository()
-//                var amount = 0
-//                val codes: List<String> = repository.GetCodes()
-//                if (codes.isNotEmpty()) {
-//                    amount = codes.size
-//                }
-//                repository.InsertInfo(foudInfoEntity)
-//                if (amount == repository.GetCodes().size) {
-//                    Snackbar.make(requireView(), "添加失败", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show()
-//                } else {
-//                    Snackbar.make(requireView(), "添加成功", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show()
-//                    dialog.dismiss()
-//                }
-                val foudInfoDao=KtDatabase.dataBase.getDao()
+
                 lifecycleScope.launch(Dispatchers.IO){
+                    val foudInfoDao=KtDatabase.dataBase.getDao()
                     with(foudInfoDao){
                        val amount= getCodes()?.size
                         insertFoudInfo(foudInfoEntity)

@@ -12,6 +12,7 @@ import com.example.myfundkt.utils.Conteaxt;
 
 import org.jetbrains.annotations.NotNull;
 
+
 public class MyApplication extends Application {
 
     @Override
