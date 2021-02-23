@@ -12,7 +12,6 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.myfundkt.R
 import com.example.myfundkt.databinding.ImportDataFragmentBinding
-import com.example.myfundkt.db.DbRepository
 import com.example.myfundkt.db.KtDatabase
 import com.example.myfundkt.ui.MyViewModel
 import com.example.myfundkt.utils.ToastUtil

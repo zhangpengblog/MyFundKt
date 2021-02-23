@@ -9,13 +9,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.myfundkt.databinding.EditFragmentBinding
 import com.example.myfundkt.ui.MyViewModel
-import com.example.myfundkt.utils.ToastUtil
 
 class EditFragment : Fragment() {
 private lateinit var binding: EditFragmentBinding
     private lateinit var myViewModel: MyViewModel
     companion object {
-        fun newInstance() = EditFragment()
     }
 
     private lateinit var viewModel: EditViewModel
@@ -23,7 +21,7 @@ private lateinit var binding: EditFragmentBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = EditFragmentBinding.inflate(inflater,container,false)
         return binding.root
     }
@@ -39,12 +37,12 @@ private lateinit var binding: EditFragmentBinding
         myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
         myViewModel.infomationCode.observe(viewLifecycleOwner, {
             it?.let {
-                binding.code?.text = it
+                binding.code.text = it
                 viewModel.find(it)
             }
         })
         // TODO: Use the ViewModel
-        binding.button?.setOnClickListener {
+        binding.button.setOnClickListener {
             viewModel.foudInfoEntity.value?.let {
                 it.quantity = binding.quantity.text.toString().toDouble()
                 it.cost = binding.cost.text.toString().toDouble()

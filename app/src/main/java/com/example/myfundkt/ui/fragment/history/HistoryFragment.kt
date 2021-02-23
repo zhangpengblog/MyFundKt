@@ -10,9 +10,6 @@ import com.example.myfundkt.R
 
 class HistoryFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = HistoryFragment()
-    }
 
     private lateinit var viewModel: HistoryViewModel
 

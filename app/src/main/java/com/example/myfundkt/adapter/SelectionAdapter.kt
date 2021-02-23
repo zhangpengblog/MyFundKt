@@ -2,18 +2,13 @@ package com.example.myfundkt.adapter
 
 import android.graphics.Color
 import android.os.Build
-import android.view.View
-import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.listener.OnItemLongClickListener
-import com.chad.library.adapter.base.module.BaseDraggableModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.example.myfundkt.R
 import com.example.myfundkt.bean.CollectionBean
 import com.example.myfundkt.utils.DKGREEN
 import com.example.myfundkt.utils.MyLog
-import com.example.myfundkt.utils.ToastUtil
 
 private const val TAG = "SelectionAdapter"
 class SelectionAdapter(CollectionBean: MutableList<CollectionBean>?): BaseQuickAdapter<CollectionBean, BaseViewHolder>(

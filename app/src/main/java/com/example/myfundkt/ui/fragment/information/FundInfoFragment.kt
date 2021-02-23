@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.myfundkt.R
 import com.example.myfundkt.databinding.FundInfoFragmentBinding
@@ -28,7 +27,7 @@ class FundInfoFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         activity?.title = "详情"
         binding = FundInfoFragmentBinding.inflate(inflater,container,false)
 //        return inflater.inflate(R.layout.fund_info_fragment, container, false)
@@ -54,15 +53,14 @@ class FundInfoFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(requireActivity()).get(FundInfoViewModel::class.java).apply {
-            progressBarVisibility.observe(viewLifecycleOwner, Observer {
+            progressBarVisibility.observe(viewLifecycleOwner, {
                binding.progressBar.visibility = it
             })
         }
-        var code: String?
         Log.d(TAG, "onActivityCreated:code ")
         myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
         myViewModel.infomationCode.observe(requireActivity(), {
-            Log.d(TAG, "onActivityCreated:code "+it)
+            Log.d(TAG, "onActivityCreated:code $it")
                 it?.let {
                     viewModel.initSellectionFundCoro(it)
                 }

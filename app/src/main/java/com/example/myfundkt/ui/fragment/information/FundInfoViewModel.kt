@@ -7,11 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myfundkt.bean.information.Expansion
-import com.example.myfundkt.bean.information.InformationData
-import com.example.myfundkt.http.Api
-import com.example.myfundkt.http.GetRetrofit
-import com.example.myfundkt.http.KtApi
-import com.example.myfundkt.http.response.FundVarietieValuationDetailResponse
 import com.example.myfundkt.ui.lineChart.LineChart
 import com.example.myfundkt.utils.Fundmobapi
 import kotlinx.coroutines.Dispatchers
@@ -72,7 +67,7 @@ class FundInfoViewModel : ViewModel() {
                         val dataTemp = mutableListOf<LineChart.Data<Float>>()
                         if (temp != null) {
                             lineData?.forEach { s: String ->
-                                val strArray = s.split(",");
+                                val strArray = s.split(",")
                                 val zd: Float = strArray[2].toFloat()
                                 temp *= (1 + zd)
                                 val value = mid?.times((1 + (zd / 100)))

@@ -123,7 +123,7 @@ class MyViewModel : ViewModel() {
 
         MyLog.d(TAG, "setLiveCollection: $code")
         if(code.isNotEmpty()){
-            var entity: FoudInfoEntity? =null
+            var entity: FoudInfoEntity?
             val collectionBean = viewModelScope.async{
                 val foudInfoDao= KtDatabase.dataBase.getDao()
                 entity= foudInfoDao.findByCode(code)
@@ -140,11 +140,11 @@ class MyViewModel : ViewModel() {
                     val 持有额 = getCye(昨日价, 持有份额) //持有额
                     val 持有收益 = getCysy(昨日价, 持有份额, 成本价) //持有收益
                     val 持有收益率 = getCysyl(昨日价, 成本价) //持有收益率
-                    var 估算收益 = "" //估算收益
+                    var 估算收益: String //估算收益
                     Log.d(TAG, "setLiveCollection: " + b.PDATE)
                     Log.d(TAG, "setLiveCollection:时间 $时间")
 
-                    var 涨跌 = ""
+                    var 涨跌: String
                     var updated = false
                     if (b.PDATE == b.GZTIME.substring(IntRange(0, 9))) {//已结算
                         Log.d(TAG, "setLiveCollection: 已结算")
@@ -298,7 +298,7 @@ class MyViewModel : ViewModel() {
      *    =[-(涨跌幅)/(1+涨跌幅)]*今日价*持有额
      * @param gszzl    涨跌幅
      * @param quantity 持有额
-     * @param today 今日价
+     * @param nav 今日价
      * @return 估算收益
      */
 

@@ -1,9 +1,6 @@
 package com.example.myfundkt.utils
 
-import android.graphics.Color
-import android.util.Log
 import android.view.View
-import androidx.annotation.ColorInt
 import com.example.myfundkt.bean.CollectionBean
 import com.example.myfundkt.http.GetRetrofit
 import com.example.myfundkt.http.KtApi
