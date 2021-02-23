@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.myfundkt.utils.RoundRelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.myfundkt.utils.RoundRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:theme="@style/Theme.MyFundKt"
     android:layout_marginBottom="@dimen/dp_10"
+    android:theme="@style/Theme.MyFundKt"
     app:roundRadius="10dp">
 
 
@@ -14,173 +13,173 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/name"
-                android:theme="@style/MaterialAlertDialog.MaterialComponents.Title.Text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:ellipsize="marquee"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:padding="5dp"
-                android:singleLine="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="MissingConstraints"
-                tools:text="基金名称" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:padding="5dp"
+            android:singleLine="true"
+            android:theme="@style/MaterialAlertDialog.MaterialComponents.Title.Text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints"
+            tools:text="基金名称" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/appCompatTextView2"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/appCompatTextView2"
 
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:padding="5dp"
-                android:text="份额/金额"
-                android:textAlignment="textStart"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/name"
-                tools:ignore="MissingConstraints" />
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:padding="5dp"
+            android:text="份额/金额"
+            android:textAlignment="textStart"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            tools:ignore="MissingConstraints" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/appCompatTextView3"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/appCompatTextView3"
 
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:padding="5dp"
-                android:text="持有收益"
-                android:textAlignment="textEnd"
-                app:layout_constraintEnd_toStartOf="@+id/guideline4"
-                app:layout_constraintStart_toStartOf="@+id/guideline4"
-                app:layout_constraintTop_toBottomOf="@+id/name" />
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:padding="5dp"
+            android:text="持有收益"
+            android:textAlignment="textEnd"
+            app:layout_constraintEnd_toStartOf="@+id/guideline4"
+            app:layout_constraintStart_toStartOf="@+id/guideline4"
+            app:layout_constraintTop_toBottomOf="@+id/name" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/appCompatTextView5"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/appCompatTextView5"
 
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:padding="5dp"
-                android:text="估算收益"
-                android:textAlignment="textEnd"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/name" />
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:padding="5dp"
+            android:text="估算收益"
+            android:textAlignment="textEnd"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/name" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.6" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.6" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/fe"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:theme="@style/MaterialAlertDialog.MaterialComponents.Title.Text"
-                android:textSize="@dimen/small_text"
-                android:text="份额"
-                android:textAlignment="textStart"
-                app:layout_constraintEnd_toEndOf="@+id/appCompatTextView2"
-                app:layout_constraintStart_toStartOf="@+id/appCompatTextView2"
-                app:layout_constraintTop_toBottomOf="@+id/appCompatTextView2"
-                tools:ignore="MissingConstraints" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/fe"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="份额"
+            android:textAlignment="textStart"
+            android:textSize="@dimen/small_text"
+            android:theme="@style/MaterialAlertDialog.MaterialComponents.Title.Text"
+            app:layout_constraintEnd_toEndOf="@+id/appCompatTextView2"
+            app:layout_constraintStart_toStartOf="@+id/appCompatTextView2"
+            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView2"
+            tools:ignore="MissingConstraints" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/cye"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:theme="@style/MaterialAlertDialog.MaterialComponents.Title.Text"
-                android:layout_marginBottom="8dp"
-                android:padding="5dp"
-                android:text="金额"
-                android:textAlignment="textStart"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/fe"
-                app:layout_constraintStart_toStartOf="@+id/fe"
-                app:layout_constraintTop_toBottomOf="@+id/fe"
-                tools:ignore="MissingConstraints" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/cye"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:padding="5dp"
+            android:text="金额"
+            android:textAlignment="textStart"
+            android:theme="@style/MaterialAlertDialog.MaterialComponents.Title.Text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/fe"
+            app:layout_constraintStart_toStartOf="@+id/fe"
+            app:layout_constraintTop_toBottomOf="@+id/fe"
+            tools:ignore="MissingConstraints" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/cysy"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/cysy"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
 
-                android:padding="5dp"
-                android:textAlignment="textEnd"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/cysyl"
-                app:layout_constraintStart_toStartOf="@+id/cysyl"
-                app:layout_constraintTop_toBottomOf="@+id/cysyl"
-                tools:text="持有收益" />
+            android:padding="5dp"
+            android:textAlignment="textEnd"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/cysyl"
+            app:layout_constraintStart_toStartOf="@+id/cysyl"
+            app:layout_constraintTop_toBottomOf="@+id/cysyl"
+            tools:text="持有收益" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/cysyl"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/small_text"
-                android:padding="5dp"
-                android:textAlignment="textEnd"
-                app:layout_constraintEnd_toEndOf="@+id/appCompatTextView3"
-                app:layout_constraintStart_toStartOf="@+id/appCompatTextView3"
-                app:layout_constraintTop_toBottomOf="@+id/appCompatTextView3"
-                tools:text="收益率" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/cysyl"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textAlignment="textEnd"
+            android:textSize="@dimen/small_text"
+            app:layout_constraintEnd_toEndOf="@+id/appCompatTextView3"
+            app:layout_constraintStart_toStartOf="@+id/appCompatTextView3"
+            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView3"
+            tools:text="收益率" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/zdf"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:textSize="@dimen/small_text"
-                android:textAlignment="textEnd"
-                app:layout_constraintEnd_toEndOf="@+id/appCompatTextView5"
-                app:layout_constraintStart_toStartOf="@+id/appCompatTextView5"
-                app:layout_constraintTop_toBottomOf="@+id/appCompatTextView5"
-                tools:text="收益率" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/zdf"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textAlignment="textEnd"
+            android:textSize="@dimen/small_text"
+            app:layout_constraintEnd_toEndOf="@+id/appCompatTextView5"
+            app:layout_constraintStart_toStartOf="@+id/appCompatTextView5"
+            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView5"
+            tools:text="收益率" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/gssy"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/gssy"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
 
-                android:layout_marginBottom="8dp"
-                android:padding="5dp"
-                android:textAlignment="textEnd"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/zdf"
-                app:layout_constraintStart_toStartOf="@+id/zdf"
-                app:layout_constraintTop_toBottomOf="@+id/zdf"
-                tools:text="估算收益" />
+            android:layout_marginBottom="8dp"
+            android:padding="5dp"
+            android:textAlignment="textEnd"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/zdf"
+            app:layout_constraintStart_toStartOf="@+id/zdf"
+            app:layout_constraintTop_toBottomOf="@+id/zdf"
+            tools:text="估算收益" />
 
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginEnd="8dp"
-                android:text="xx:xx"
-                android:gravity="center"
-                app:layout_constraintBottom_toTopOf="@+id/appCompatTextView5"
-                app:layout_constraintEnd_toStartOf="@+id/appCompatImageView"
-                app:layout_constraintTop_toTopOf="@+id/name"
-                app:layout_constraintVertical_bias="0.0" />
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="8dp"
+            android:gravity="center"
+            android:text="xx:xx"
+            app:layout_constraintBottom_toTopOf="@+id/appCompatTextView5"
+            app:layout_constraintEnd_toStartOf="@+id/appCompatImageView"
+            app:layout_constraintTop_toTopOf="@+id/name"
+            app:layout_constraintVertical_bias="0.0" />
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/appCompatImageView"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:background="@drawable/ic_baseline_check_circle_24"
-                app:layout_constraintBottom_toBottomOf="@+id/name"
-                app:layout_constraintEnd_toEndOf="@+id/name"
-                app:layout_constraintTop_toTopOf="@+id/name" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/appCompatImageView"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/ic_baseline_check_circle_24"
+            app:layout_constraintBottom_toBottomOf="@+id/name"
+            app:layout_constraintEnd_toEndOf="@+id/name"
+            app:layout_constraintTop_toTopOf="@+id/name" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.example.myfundkt.utils.RoundRelativeLayout>

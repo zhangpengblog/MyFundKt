@@ -7,73 +7,73 @@ public class MyLog {
 
     /*d*/
     public static void d(String TAG, String msg) {
-        XLog.tag (head + TAG).d (msg);
+        XLog.tag(head + TAG).d(msg);
     }
 
     public static void d(String TAG, Object object) {
-        XLog.tag (head + TAG).d (object);
+        XLog.tag(head + TAG).d(object);
     }
 
     public static void d(String TAG, Object[] array) {
-        XLog.tag (head + TAG).d (array);
+        XLog.tag(head + TAG).d(array);
     }
 
     public static void d(String TAG, String msg, Throwable tr) {
-        XLog.tag (head + TAG).d (msg, tr);
+        XLog.tag(head + TAG).d(msg, tr);
     }
 
     public static void d(String TAG, String format, Object... args) {
-        XLog.tag (head + TAG).d (format, args);
+        XLog.tag(head + TAG).d(format, args);
     }
 
     /*i*/
     public static void i(String TAG, String msg) {
-        XLog.tag (head + TAG).i (msg);
+        XLog.tag(head + TAG).i(msg);
     }
 
     public static void i(String TAG, Object object) {
-        XLog.tag (head + TAG).i (object);
+        XLog.tag(head + TAG).i(object);
     }
 
     public static void i(String TAG, Object[] array) {
-        XLog.tag (head + TAG).i (array);
+        XLog.tag(head + TAG).i(array);
     }
 
     public static void i(String TAG, String msg, Throwable tr) {
-        XLog.tag (head + TAG).i (msg, tr);
+        XLog.tag(head + TAG).i(msg, tr);
     }
 
     public static void i(String TAG, String format, Object... args) {
-        XLog.tag (head + TAG).i (format, args);
+        XLog.tag(head + TAG).i(format, args);
     }
 
     /*e*/
     public static void e(String TAG, String msg) {
-        XLog.tag (head + TAG).e (msg);
+        XLog.tag(head + TAG).e(msg);
     }
 
     public static void e(String TAG, Object object) {
-        XLog.tag (head + TAG).e (object);
+        XLog.tag(head + TAG).e(object);
     }
 
     public static void e(String TAG, Object[] array) {
-        XLog.tag (head + TAG).e (array);
+        XLog.tag(head + TAG).e(array);
     }
 
     public static void e(String TAG, String msg, Throwable tr) {
-        XLog.tag (head + TAG).e (msg, tr);
+        XLog.tag(head + TAG).e(msg, tr);
     }
 
     public static void e(String TAG, String format, Object... args) {
-        XLog.tag (head + TAG).e (format, args);
+        XLog.tag(head + TAG).e(format, args);
     }
 
     /*json*/
     public static void json(String TAG, String json) {
-        XLog.tag (head + TAG + "\n").b ().json (json);
+        XLog.tag(head + TAG + "\n").b().json(json);
     }
 
     public static void json(String TAG, String msg, String json) {
-        XLog.tag (head + TAG + ": " + msg + ": \n").b ().json (json);
+        XLog.tag(head + TAG + ": " + msg + ": \n").b().json(json);
     }
 }

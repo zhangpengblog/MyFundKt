@@ -4,8 +4,6 @@ import com.example.myfundkt.bean.holdingStocks.HoldingStocksBean
 import com.example.myfundkt.bean.information.InformationData
 import com.example.myfundkt.bean.selection.SelectionBean
 import com.example.myfundkt.bean.top.TopBean
-import okhttp3.ResponseBody
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -32,7 +30,7 @@ interface KtApi {
 
     //持仓
     @GET("FundMNewApi/FundMNInverstPosition")
-   suspend fun getHoldingStocks(
+    suspend fun getHoldingStocks(
         @Query("FCODE") FCODE: String?,
         @Query("deviceid") deviceid: String?,
         @Query("plat") plat: String?,

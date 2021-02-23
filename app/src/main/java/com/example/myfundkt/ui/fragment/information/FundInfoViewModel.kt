@@ -13,30 +13,27 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 private const val TAG = "FundInfoViewModel"
+
 class FundInfoViewModel : ViewModel() {
     // TODO: Implement the ViewModel
 
 
     //line数组
     private val _data = MutableLiveData(listOf<LineChart.Data<Float>>())
-     val data : LiveData<List<LineChart.Data<Float>>> = _data
+    val data: LiveData<List<LineChart.Data<Float>>> = _data
 
     //净值起点
     private val _start = MutableLiveData(0f)
-    val  start: LiveData<Float> =_start
+    val start: LiveData<Float> = _start
 
     //详细信息
     private val _expansion = MutableLiveData(Expansion())
-    val expansion :LiveData<Expansion> =_expansion
+    val expansion: LiveData<Expansion> = _expansion
 
 
     //loading显示
     private val _progressBarVisibility = MutableLiveData(View.VISIBLE)
     val progressBarVisibility: LiveData<Int> = _progressBarVisibility
-
-
-
-
 
 
     fun initSellectionFundCoro(FCODE: String) {

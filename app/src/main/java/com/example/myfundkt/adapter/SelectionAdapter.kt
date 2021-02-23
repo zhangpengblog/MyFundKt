@@ -11,13 +11,15 @@ import com.example.myfundkt.utils.DKGREEN
 import com.example.myfundkt.utils.MyLog
 
 private const val TAG = "SelectionAdapter"
-class SelectionAdapter(CollectionBean: MutableList<CollectionBean>?): BaseQuickAdapter<CollectionBean, BaseViewHolder>(
-    R.layout.item_my_fund,
-    CollectionBean
-) {
+
+class SelectionAdapter(CollectionBean: MutableList<CollectionBean>?) :
+    BaseQuickAdapter<CollectionBean, BaseViewHolder>(
+        R.layout.item_my_fund,
+        CollectionBean
+    ) {
     @RequiresApi(Build.VERSION_CODES.P)
     override fun convert(holder: BaseViewHolder, item: CollectionBean) {
-        with(item){
+        with(item) {
 
             MyLog.d(TAG, "gssy: $估算收益")
             holder.setText(R.id.name, 名称)
@@ -25,12 +27,12 @@ class SelectionAdapter(CollectionBean: MutableList<CollectionBean>?): BaseQuickA
                 .setText(R.id.cysy, 持有收益)
                 .setText(R.id.cysyl, 持有收益率)
                 .setText(R.id.gssy, 估算收益)
-                .setText(R.id.fe,持有份额)
+                .setText(R.id.fe, 持有份额)
                 .setText(R.id.zdf, 涨跌幅)
-                .setText(R.id.time,时间)
+                .setText(R.id.time, 时间)
 
             涨跌幅?.let {
-                if (it.contains("-")){
+                if (it.contains("-")) {
                     holder.setTextColor(R.id.zdf, DKGREEN)
                 } else {
                     holder.setTextColor(R.id.zdf, Color.RED)
@@ -61,10 +63,10 @@ class SelectionAdapter(CollectionBean: MutableList<CollectionBean>?): BaseQuickA
             }
 
             updated?.let {
-                if (it){
-                    holder.setGone(R.id.appCompatImageView,false)
-                }else{
-                    holder.setGone(R.id.appCompatImageView,true)
+                if (it) {
+                    holder.setGone(R.id.appCompatImageView, false)
+                } else {
+                    holder.setGone(R.id.appCompatImageView, true)
                 }
             }
         }

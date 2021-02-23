@@ -2,7 +2,6 @@ package com.example.myfundkt.utils;
 
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -43,41 +42,43 @@ public class RoundRelativeLayout extends RelativeLayout {
 //    }
 
     public RoundRelativeLayout(Context context, AttributeSet attrs) {
-        super (context, attrs);
-        TypedArray typedArray = context.obtainStyledAttributes (attrs, R.styleable.RoundRelativeLayout);
-        int radius = typedArray.getDimensionPixelSize (R.styleable.RoundRelativeLayout_roundRadius, 30);
+        super(context, attrs);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.RoundRelativeLayout);
+        int radius = typedArray.getDimensionPixelSize(R.styleable.RoundRelativeLayout_roundRadius, 30);
         int backgroudColor = typedArray.getColor(R.styleable.RoundRelativeLayout_backGroundColor, Color.TRANSPARENT);//        MyLog.d("RoundRelativeLayout", "backgroudColor: "+backgroudColor);
-        typedArray.recycle (); //注意回收
-        init (radius,backgroudColor);
+        typedArray.recycle(); //注意回收
+        init(radius, backgroudColor);
     }
 
-    private void init(int radius,int color) {
-        mPath = new Path ();
-        mPath.setFillType (Path.FillType.EVEN_ODD);
+    private void init(int radius, int color) {
+        mPath = new Path();
+        mPath.setFillType(Path.FillType.EVEN_ODD);
         setBackgroundColor(color);
-        setCornerRadius (radius);
+        setCornerRadius(radius);
     }
 
 
     /**
      * 设置是否圆角裁边
+     *
      * @param roundMode
      */
-    public void setRoundMode(int roundMode){
+    public void setRoundMode(int roundMode) {
         mRoundMode = roundMode;
     }
 
     /**
      * 设置圆角半径
+     *
      * @param radius
      */
-    public void setCornerRadius(int radius){
+    public void setCornerRadius(int radius) {
         mRadius = radius;
     }
 
-    private void checkPathChanged(){
+    private void checkPathChanged() {
 
-        if(getWidth() == mWidth && getHeight() == mHeight && mLastRadius == mRadius){
+        if (getWidth() == mWidth && getHeight() == mHeight && mLastRadius == mRadius) {
             return;
         }
 
@@ -87,9 +88,9 @@ public class RoundRelativeLayout extends RelativeLayout {
 
         mPath.reset();
 
-        switch (mRoundMode){
+        switch (mRoundMode) {
             case MODE_ALL:
-                mPath.addRoundRect(new RectF (0, 0, mWidth, mHeight), mRadius, mRadius, Path.Direction.CW);
+                mPath.addRoundRect(new RectF(0, 0, mWidth, mHeight), mRadius, mRadius, Path.Direction.CW);
                 break;
             case MODE_LEFT:
                 mPath.addRoundRect(new RectF(0, 0, mWidth, mHeight),
@@ -118,7 +119,7 @@ public class RoundRelativeLayout extends RelativeLayout {
     @Override
     public void draw(Canvas canvas) {
 
-        if(mRoundMode != MODE_NONE){
+        if (mRoundMode != MODE_NONE) {
             int saveCount = canvas.save();
 
             checkPathChanged();
@@ -127,7 +128,7 @@ public class RoundRelativeLayout extends RelativeLayout {
             super.draw(canvas);
 
             canvas.restoreToCount(saveCount);
-        }else {
+        } else {
             super.draw(canvas);
         }
 

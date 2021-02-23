@@ -9,7 +9,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SplashActivity : AppCompatActivity() {
-    lateinit var binding:ActivitySplashBinding
+    lateinit var binding: ActivitySplashBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
@@ -31,7 +31,7 @@ class SplashActivity : AppCompatActivity() {
         this.finish()
     }
 
-    fun jump(){
-        startActivity(Intent(this,MainActivity::class.java))
+    fun jump() {
+        startActivity(Intent(this, MainActivity::class.java))
     }
 }

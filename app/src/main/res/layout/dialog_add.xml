@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="10dp">
+
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp">
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/code"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            android:hint="基金编码" />
+            android:hint="基金编码"
+            android:inputType="number" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp">
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/cost"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:hint="成本价" />
+            android:hint="成本价"
+            android:inputType="numberDecimal" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -34,32 +37,33 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp">
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/quantity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:hint="持有份额" />
+            android:hint="持有份额"
+            android:inputType="numberDecimal" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cornerRadius="40dp"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
         android:text="确定"
-        android:textColor="@android:color/primary_text_dark"/>
+        android:textColor="@android:color/primary_text_dark"
+        app:cornerRadius="40dp" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/importFrom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cornerRadius="40dp"
         android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="40dp"
         android:text="导入"
-        android:textColor="@android:color/primary_text_dark"/>
+        android:textColor="@android:color/primary_text_dark"
+        app:cornerRadius="40dp" />
 </LinearLayout>

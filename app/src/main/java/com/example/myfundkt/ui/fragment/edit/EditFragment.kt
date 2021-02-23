@@ -11,10 +11,10 @@ import com.example.myfundkt.databinding.EditFragmentBinding
 import com.example.myfundkt.ui.MyViewModel
 
 class EditFragment : Fragment() {
-private lateinit var binding: EditFragmentBinding
+    private lateinit var binding: EditFragmentBinding
     private lateinit var myViewModel: MyViewModel
-    companion object {
-    }
+
+    companion object;
 
     private lateinit var viewModel: EditViewModel
 
@@ -22,13 +22,8 @@ private lateinit var binding: EditFragmentBinding
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = EditFragmentBinding.inflate(inflater,container,false)
+        binding = EditFragmentBinding.inflate(inflater, container, false)
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

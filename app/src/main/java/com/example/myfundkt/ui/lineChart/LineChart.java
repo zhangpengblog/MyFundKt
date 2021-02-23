@@ -18,20 +18,19 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
  * We need to modify these variables and functions manually:
- *
- *      levelFormat
- *      getMaxData()
- *      getMinData()
- *      ...
- *
+ * <p>
+ * levelFormat
+ * getMaxData()
+ * getMinData()
+ * ...
  */
 public class LineChart extends View {
     private static final String TAG = "LineChart";
+
     public static class Data<T> {
         // for xAxis
         public Data(T v) {
@@ -41,12 +40,12 @@ public class LineChart extends View {
         }
 
         //for fund
-        public Data(T l,T r, String bottomLabel){
-            rightvalue =r;
+        public Data(T l, T r, String bottomLabel) {
+            rightvalue = r;
             value = l;
             this.bottomLabel = bottomLabel;
             leftLabel = String.format(levelFormat, value);
-            rightlabel = String.format(rightFormat,rightvalue);
+            rightlabel = String.format(rightFormat, rightvalue);
         }
 
         // for data
@@ -107,13 +106,13 @@ public class LineChart extends View {
     private float mSelfWidth;
     private float mSelfHeight;
 
-    private Paint mPaint;
-    private Paint mBackgroundPaint;
-    private Paint mTipPaint;
+    private final Paint mPaint;
+    private final Paint mBackgroundPaint;
+    private final Paint mTipPaint;
     private List<Data<String>> xAxisBasisData = new ArrayList<>();
     private List<Data<Float>> mData = new ArrayList<>();
-    private Float midStart = 0f ;
-    private List<PointF> mPoints = new ArrayList<>();
+    private Float midStart = 0f;
+    private final List<PointF> mPoints = new ArrayList<>();
 
     float leftTextSpace = DEFAULT_LEFT_TEXT_SPACE;
     float horizontalSpaceLeft = 150f;
@@ -143,7 +142,7 @@ public class LineChart extends View {
     static String levelFormat = "%.2f";
     static String rightFormat = "%.4f";
 
-    private Context mContext;
+    private final Context mContext;
 
     public LineChart(Context context) {
         this(context, null);
@@ -182,6 +181,7 @@ public class LineChart extends View {
         this.mData = data;
         invalidate();
     }
+
     public void setMidStart(Float f) throws Exception {
         if (xAxisBasisData == null) {
             throw new Exception("xAxisBasisData is null");
@@ -214,8 +214,8 @@ public class LineChart extends View {
 
     private void init() {
         proportionWidth = (mSelfWidth - horizontalSpaceLeft - horizontalSpaceRight) / (xAxisBasisData.size() - 1);
-        Log.d(TAG, "init:xAxisBasisData.size()  "+xAxisBasisData.size() );
-        Log.d(TAG, "init:proportionWidth "+proportionWidth);
+        Log.d(TAG, "init:xAxisBasisData.size()  " + xAxisBasisData.size());
+        Log.d(TAG, "init:proportionWidth " + proportionWidth);
     }
 
     private void initPoint() {
@@ -260,7 +260,7 @@ public class LineChart extends View {
         mPaint.setTextAlign(Paint.Align.LEFT);
         canvas.drawText("09:30", currentTextX, currentTextY, mPaint);
         mPaint.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText("11:30/13:00", mSelfWidth/2, currentTextY, mPaint);
+        canvas.drawText("11:30/13:00", mSelfWidth / 2, currentTextY, mPaint);
         mPaint.setTextAlign(Paint.Align.RIGHT);
         canvas.drawText("15:00", mSelfWidth - horizontalSpaceRight, currentTextY, mPaint);
     }
@@ -348,10 +348,10 @@ public class LineChart extends View {
         for (int i = 0; i <= levels; ++i) {
             float textStartX = horizontalSpaceLeft - leftTextSpace;
             float textStartY = mSelfHeight - verticalSpaceBottom - i * oneLevelValueHeight + fontHeight;
-            String text2 = String.format(levelFormat, getMinData() + (getMaxData() - getMinData()) / levels * i)+"%";
-            if (text2.contains("-")){
+            String text2 = String.format(levelFormat, getMinData() + (getMaxData() - getMinData()) / levels * i) + "%";
+            if (text2.contains("-")) {
                 mPaint.setColor(0xFF00880E);//green
-            }else {
+            } else {
                 mPaint.setColor(Color.RED);
             }
             canvas.drawText(text2, textStartX, textStartY, mPaint);
@@ -376,20 +376,20 @@ public class LineChart extends View {
         mPaint.setColor(Color.DKGRAY);
         mPaint.setTextAlign(Paint.Align.RIGHT);
         mPaint.setTextSize(LineChartUtils.dp2px(mContext, textSize));
-        Log.d(TAG, "getPercentMinData: "+getPercentMinData());
+        Log.d(TAG, "getPercentMinData: " + getPercentMinData());
 //        Math.min(min, mData.get(i).rightvalue)
         //中间层
-        int m = (levels+1)/2;
+        int m = (levels + 1) / 2;
         for (int i = 0; i <= levels; ++i) {
-            float textStartX = mSelfWidth-leftTextSpace;
+            float textStartX = mSelfWidth - leftTextSpace;
             float textStartY = mSelfHeight - verticalSpaceBottom - i * oneLevelValueHeight + fontHeight;
-            if (i==m){
-                String text2 = String.format(rightFormat,midStart);
+            if (i == m) {
+                String text2 = String.format(rightFormat, midStart);
                 canvas.drawText(text2, textStartX, textStartY, mPaint);
-            }else {
+            } else {
                 float percent = getMinData() + (getMaxData() - getMinData()) / levels * i;
 
-                String text2 = String.format(rightFormat, ((percent/100)+1)*midStart);
+                String text2 = String.format(rightFormat, ((percent / 100) + 1) * midStart);
                 canvas.drawText(text2, textStartX, textStartY, mPaint);
             }
 
@@ -534,7 +534,7 @@ public class LineChart extends View {
                 Paint.FontMetrics fontMetrics = mTipPaint.getFontMetrics();
                 float distance = (fontMetrics.bottom - fontMetrics.top) / 2 - fontMetrics.bottom;
                 float baseline = rectF.centerY() + distance;
-                canvas.drawText(text+"%", rectF.centerX(), baseline, mTipPaint);
+                canvas.drawText(text + "%", rectF.centerX(), baseline, mTipPaint);
             }
             {
                 // right
@@ -547,8 +547,8 @@ public class LineChart extends View {
                 float fontWidth = rect.width();
                 float fontHeight = rect.height();
 
-                float left = mSelfWidth-horizontalSpaceRight - leftTextSpace - fontWidth - textPadding * 4;
-                float right = mSelfWidth-horizontalSpaceRight;
+                float left = mSelfWidth - horizontalSpaceRight - leftTextSpace - fontWidth - textPadding * 4;
+                float right = mSelfWidth - horizontalSpaceRight;
                 float top = moveY - fontHeight / 2 - textPadding;
                 float bottom = moveY + fontHeight / 2 + textPadding;
 
@@ -603,8 +603,9 @@ public class LineChart extends View {
         }
         return getMinData_();
     }
+
     private float getPercentMaxData() {
-        if (getMinData_percent () == getMaxData_percent()) {
+        if (getMinData_percent() == getMaxData_percent()) {
             return getMinData_percent() + DEFAULT_VALUE_GAP;
         }
         return getMaxData_percent();

@@ -12,18 +12,20 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.myfundkt.R
 import com.example.myfundkt.databinding.ImportDataFragmentBinding
-import com.example.myfundkt.db.KtDatabase
 import com.example.myfundkt.ui.MyViewModel
 import com.example.myfundkt.utils.ToastUtil
+import com.example.myfundkt.utils.ktDao
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
 private const val TAG = "ImportDataFragment"
+
 class ImportDataFragment : Fragment() {
 
-private lateinit var binding: ImportDataFragmentBinding
-    companion object {
-    }
+    private lateinit var binding: ImportDataFragmentBinding
+
+    companion object;
+
     private lateinit var myViewModel: MyViewModel
     private lateinit var viewModel: ImportDataViewModel
 
@@ -32,7 +34,7 @@ private lateinit var binding: ImportDataFragmentBinding
         savedInstanceState: Bundle?
     ): View {
         activity?.title = "导入"
-        binding = ImportDataFragmentBinding.inflate(inflater,container,false)
+        binding = ImportDataFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -40,7 +42,7 @@ private lateinit var binding: ImportDataFragmentBinding
         super.onViewCreated(view, savedInstanceState)
         binding.button2.setOnClickListener {
             binding.editTextTextMultiLine.text.toString().also {
-                if (it.isEmpty()){
+                if (it.isEmpty()) {
                     ToastUtil.show("请粘贴内容")
                     return@setOnClickListener
                 }
@@ -49,11 +51,9 @@ private lateinit var binding: ImportDataFragmentBinding
 //                    repository.ClearAll()
 //                    importData(it)
                 lifecycleScope.launch {
-                    val ktDao = KtDatabase.dataBase.getDao()
                     ktDao.clear()
                     importData(it)
                 }
-
 
 
             }
@@ -71,11 +71,12 @@ private lateinit var binding: ImportDataFragmentBinding
         viewModel = ViewModelProvider(this).get(ImportDataViewModel::class.java).apply {
             nowIndex.observe(viewLifecycleOwner, {
                 Log.d(TAG, "onActivityCreated: $it/$_count")
-                if (_count!=0 && _count==it){
+                if (_count != 0 && _count == it) {
                     view?.let { it1 ->
                         Snackbar.make(it1, "导入成功", Snackbar.LENGTH_SHORT).show()
 
-                        val controller: NavController? = getView()?.let { Navigation.findNavController(it) }
+                        val controller: NavController? =
+                            view?.let { Navigation.findNavController(it) }
                         if (controller != null) {
                             controller.navigate(R.id.action_importDataFragment_to_myFundFragment)
                             myViewModel.initSelectedFundCoro()

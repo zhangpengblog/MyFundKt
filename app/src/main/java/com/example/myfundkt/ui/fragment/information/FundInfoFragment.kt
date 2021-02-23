@@ -29,15 +29,15 @@ class FundInfoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         activity?.title = "详情"
-        binding = FundInfoFragmentBinding.inflate(inflater,container,false)
+        binding = FundInfoFragmentBinding.inflate(inflater, container, false)
 //        return inflater.inflate(R.layout.fund_info_fragment, container, false)
-      return  binding.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         lineChart = view.findViewById(R.id.line_chart)
-        val _dataList=mutableListOf<LineChart.Data<String>>()
+        val _dataList = mutableListOf<LineChart.Data<String>>()
         _dataList.add(LineChart.Data("09:30"))
         for (i in 1..240) {
             _dataList.add(LineChart.Data(""))
@@ -54,17 +54,17 @@ class FundInfoFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(requireActivity()).get(FundInfoViewModel::class.java).apply {
             progressBarVisibility.observe(viewLifecycleOwner, {
-               binding.progressBar.visibility = it
+                binding.progressBar.visibility = it
             })
         }
         Log.d(TAG, "onActivityCreated:code ")
         myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
         myViewModel.infomationCode.observe(requireActivity(), {
             Log.d(TAG, "onActivityCreated:code $it")
-                it?.let {
-                    viewModel.initSellectionFundCoro(it)
-                }
-            })
+            it?.let {
+                viewModel.initSellectionFundCoro(it)
+            }
+        })
 
 
         // TODO: Use the ViewModel
@@ -78,7 +78,7 @@ class FundInfoFragment : Fragment() {
         })
 
         viewModel.start.observe(viewLifecycleOwner, {
-            it?.let { it1->
+            it?.let { it1 ->
                 lineChart.setMidStart(it1)
             }
 
@@ -87,9 +87,9 @@ class FundInfoFragment : Fragment() {
 
         viewModel.expansion.observe(viewLifecycleOwner, {
             binding.fundTitle.text = ""
-                it?.let { it1->
-                    (it1.sHORTNAME+"("+it1.fCODE+")").also { binding.fundTitle.text = it }
-                }
+            it?.let { it1 ->
+                (it1.sHORTNAME + "(" + it1.fCODE + ")").also { binding.fundTitle.text = it }
+            }
 
 
         })

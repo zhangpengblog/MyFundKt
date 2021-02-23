@@ -11,16 +11,18 @@ import androidx.navigation.Navigation
 import com.example.myfundkt.R
 import com.example.myfundkt.utils.MyLog
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 
 
 private const val TAG = "PagesFragment"
+
 class PagesFragment : Fragment() {
-    val pages = intArrayOf(R.id.fundInfoFragment,R.id.holdingStocksFragment,R.id.editFragment)
+    val pages = intArrayOf(R.id.fundInfoFragment, R.id.holdingStocksFragment, R.id.editFragment)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        MyLog.d("PagesFragment","onCreate")
+        MyLog.d("PagesFragment", "onCreate")
 
     }
 
@@ -36,13 +38,14 @@ class PagesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val controller: NavController? = activity?.let { Navigation.findNavController(it, R.id.fragment) }
-        val graph = controller ?.graph
+        val controller: NavController? =
+            activity?.let { Navigation.findNavController(it, R.id.fragment) }
+        val graph = controller?.graph
         val tabLayout: TabLayout = view.findViewById(R.id.tabLayout)
 
-        tabLayout.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener{
+        tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                Log.d(TAG, "onViewCreated:selectedTabPosition "+tabLayout.selectedTabPosition)
+                Log.d(TAG, "onViewCreated:selectedTabPosition " + tabLayout.selectedTabPosition)
                 graph?.let {
                     it.startDestination = pages[tabLayout.selectedTabPosition]
                     controller.graph = it
@@ -60,7 +63,7 @@ class PagesFragment : Fragment() {
         })
 
 
-        Log.d(TAG, "onViewCreated:tabCount "+tabLayout.tabCount)
+        Log.d(TAG, "onViewCreated:tabCount " + tabLayout.tabCount)
 
 
     }

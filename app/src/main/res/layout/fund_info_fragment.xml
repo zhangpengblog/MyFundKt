@@ -9,16 +9,16 @@
         android:id="@+id/fundTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="@dimen/fund_title_font"
+        android:theme="@style/MaterialAlertDialog.MaterialComponents.Title.Text"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.8"
-        android:textAlignment="center"
-        android:textSize="@dimen/fund_title_font"
-        android:theme="@style/MaterialAlertDialog.MaterialComponents.Title.Text"
-        tools:text="XXXXX(xxxxxx)"/>
+        tools:text="XXXXX(xxxxxx)" />
 
     <com.example.myfundkt.ui.lineChart.LineChart
         android:id="@+id/line_chart"

@@ -14,7 +14,7 @@ class TopAdapter(diff: MutableList<Diff>?) :
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun convert(holder: BaseViewHolder, item: Diff) {
-        with(item){
+        with(item) {
             holder.setText(R.id.name, f14)
                 .setText(R.id.socre, f2.toString() + "")
                 .setText(R.id.change, "$f3%")

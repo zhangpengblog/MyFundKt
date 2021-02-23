@@ -25,13 +25,9 @@ import com.example.myfundkt.adapter.TopAdapter
 import com.example.myfundkt.bean.CollectionBean
 import com.example.myfundkt.bean.top.Diff
 import com.example.myfundkt.databinding.FragmentMyFundBinding
-import com.example.myfundkt.db.KtDatabase
 import com.example.myfundkt.db.entity.FoudInfoEntity
 import com.example.myfundkt.ui.MyViewModel
-import com.example.myfundkt.utils.DKGREEN
-import com.example.myfundkt.utils.LongSnack
-import com.example.myfundkt.utils.MyLog
-import com.example.myfundkt.utils.ShortSnack
+import com.example.myfundkt.utils.*
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -43,11 +39,10 @@ private val topData = mutableListOf<Diff>()
 private val selectionData = mutableListOf<CollectionBean>()
 
 
-
 class MyFundFragment : Fragment() {
     private lateinit var myViewModel: MyViewModel
 
-    private  lateinit var binding: FragmentMyFundBinding
+    private lateinit var binding: FragmentMyFundBinding
     private var topAdapter: TopAdapter = TopAdapter(topData)
     private var selectionAdapter: SelectionAdapter = SelectionAdapter(selectionData)
     private lateinit var controller: NavController
@@ -58,21 +53,22 @@ class MyFundFragment : Fragment() {
         // Inflate the layout for this fragment
         activity?.title = "首页"
 
-        binding = FragmentMyFundBinding.inflate(inflater,container,false)
+        binding = FragmentMyFundBinding.inflate(inflater, container, false)
 //        return inflater.inflate(R.layout.fragment_my_fund, container, false)
         return binding.root
     }
 
-    
+
     @SuppressLint("UseRequireInsteadOfGet")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         controller = view.let { Navigation.findNavController(it) }
+
         binding.fab.setOnClickListener {
             showAddDialog()
         }
         //滑动的时候隐藏or显示fab
-        binding.nestedscrollview.setOnScrollChangeListener(object :View.OnScrollChangeListener{
+        binding.nestedscrollview.setOnScrollChangeListener(object : View.OnScrollChangeListener {
             override fun onScrollChange(
                 v: View?,
                 scrollX: Int,
@@ -81,8 +77,8 @@ class MyFundFragment : Fragment() {
                 oldScrollY: Int
             ) {
 
-                if (scrollY-oldScrollY>30){
-                    if (binding.fab.visibility == View.VISIBLE){
+                if (scrollY - oldScrollY > 30) {
+                    if (binding.fab.visibility == View.VISIBLE) {
                         val hideAnim = TranslateAnimation(
                             Animation.RELATIVE_TO_SELF, 0.0f,
                             Animation.RELATIVE_TO_SELF, 0.0f,
@@ -93,10 +89,10 @@ class MyFundFragment : Fragment() {
                         binding.fab.startAnimation(hideAnim)
                     }
 
-                    binding.fab.visibility=View.GONE
+                    binding.fab.visibility = View.GONE
                 }
-                if (oldScrollY-scrollY>30){
-                    if (binding.fab.visibility == View.GONE){
+                if (oldScrollY - scrollY > 30) {
+                    if (binding.fab.visibility == View.GONE) {
                         val showAnim = TranslateAnimation(
                             Animation.RELATIVE_TO_SELF, 0.0f,
                             Animation.RELATIVE_TO_SELF, 0.0f,
@@ -107,7 +103,7 @@ class MyFundFragment : Fragment() {
                         binding.fab.startAnimation(showAnim)
                     }
 
-                    binding.fab.visibility=View.VISIBLE
+                    binding.fab.visibility = View.VISIBLE
                 }
             }
 
@@ -117,18 +113,20 @@ class MyFundFragment : Fragment() {
             refreshData()
         }
 
-        binding.top.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.top.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.top.adapter = topAdapter
 
-        binding.bottom.layoutManager=LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        binding.bottom.adapter= selectionAdapter
+        binding.bottom.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        binding.bottom.adapter = selectionAdapter
         selectionAdapter.setOnItemClickListener { _, _, position ->
 
             val args = Bundle()
             args.putString("代码", selectionData[position].代码)
 //                controller.navigate(R.id.action_myFundFragment_to_fundInfoFragment,args)
             myViewModel.infomationCode.value = selectionData[position].代码
-            MyLog.d(TAG,"代码"+selectionData[position].代码)
+            MyLog.d(TAG, "代码" + selectionData[position].代码)
 
             controller.navigate(R.id.action_myFundFragment_to_pagesFragment)
 
@@ -151,15 +149,16 @@ class MyFundFragment : Fragment() {
 
     }
 
-    private fun delete(position:Int){
+    private fun delete(position: Int) {
         val fund = selectionData[position]
         val code = fund.代码
-        lifecycleScope.launch{
-            val ktDao=KtDatabase.dataBase.getDao()
-            val entity=ktDao.findByCode(code?:"0")
+        lifecycleScope.launch {
+
+            val entity = ktDao.findByCode(code ?: "0")
             val id = entity?.id
             activity?.let {
-                AlertDialog.Builder(it).setMessage("删除").setPositiveButton("删除"
+                AlertDialog.Builder(it).setMessage("删除").setPositiveButton(
+                    "删除"
                 ) { _, _ ->
                     lifecycleScope.launch {
                         if (id != null) {
@@ -205,7 +204,7 @@ class MyFundFragment : Fragment() {
 
             topLiveData.observe(viewLifecycleOwner, {
                 binding.refreshLayout.finishRefresh()
-                Log.d(TAG, "onActivityCreated:topLiveData "+it)
+                Log.d(TAG, "onActivityCreated:topLiveData " + it)
                 topData.clear()
                 topData.addAll(it)
                 topAdapter.notifyDataSetChanged()
@@ -236,11 +235,11 @@ class MyFundFragment : Fragment() {
 
 
                     //持有收益率
-                    (String.format("%.2f", (holding / amount)*100) + "%").also {
+                    (String.format("%.2f", (holding / amount) * 100) + "%").also {
                         binding.holding.apply {
                             text = it
                             if (it.contains("-")) {
-                                setTextColor( DKGREEN)
+                                setTextColor(DKGREEN)
                             } else {
                                 setTextColor(Color.RED)
                             }
@@ -273,7 +272,7 @@ class MyFundFragment : Fragment() {
                     }
 
                     //今日收益率
-                    (String.format("%.2f", (today / amount)*100) + "%").also {
+                    (String.format("%.2f", (today / amount) * 100) + "%").also {
                         binding.today.apply {
                             text = it
                             if (it.contains("-")) {
@@ -291,7 +290,6 @@ class MyFundFragment : Fragment() {
 
 
     }
-
 
 
     fun showAddDialog() {
@@ -314,21 +312,21 @@ class MyFundFragment : Fragment() {
             val s2 = editText2.text.toString()
             val s3 = editText3.text.toString()
             if (s1.isEmpty() || s2.isEmpty() || s3.isEmpty()) {
-                "不能为空".ShortSnack(requireView())
+                "不能为空".shortSnack(requireView())
             } else {
                 val cost = s2.toDouble()
                 val quantity = s3.toDouble()
                 val foudInfoEntity = FoudInfoEntity(s1, quantity, cost)
 
-                lifecycleScope.launch(Dispatchers.IO){
-                    val foudInfoDao=KtDatabase.dataBase.getDao()
-                    with(foudInfoDao){
-                       val amount= getCodes()?.size
+                lifecycleScope.launch(Dispatchers.IO) {
+
+                    with(ktDao) {
+                        val amount = getCodes()?.size
                         insertFundInfo(foudInfoEntity)
                         if (amount == getCodes()?.size) {
-                            "添加失败".LongSnack(requireView())
+                            "添加失败".longSnack(requireView())
                         } else {
-                            "添加成功".LongSnack(requireView())
+                            "添加成功".longSnack(requireView())
                             dialog.dismiss()
                         }
                     }
@@ -339,15 +337,13 @@ class MyFundFragment : Fragment() {
 
         val importData = dialogView.findViewById<Button>(R.id.importFrom)
         importData.setOnClickListener {
-                dialog.dismiss()
-                val navController = Navigation.findNavController(requireView())
-                navController.navigate(R.id.action_myFundFragment_to_importDataFragment)
+            dialog.dismiss()
+            val navController = Navigation.findNavController(requireView())
+            navController.navigate(R.id.action_myFundFragment_to_importDataFragment)
 
 
         }
     }
-
-
 
 
 }

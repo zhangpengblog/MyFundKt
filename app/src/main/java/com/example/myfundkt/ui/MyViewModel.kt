@@ -7,7 +7,6 @@ import androidx.lifecycle.*
 import com.example.myfundkt.bean.CollectionBean
 import com.example.myfundkt.bean.selection.Data
 import com.example.myfundkt.bean.top.Diff
-import com.example.myfundkt.db.KtDatabase
 import com.example.myfundkt.db.entity.FoudInfoEntity
 import com.example.myfundkt.http.Api
 import com.example.myfundkt.http.GetRetrofit
@@ -17,7 +16,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.util.*
@@ -26,8 +24,6 @@ import kotlin.collections.set
 private const val TAG = "MyViewModel"
 
 class MyViewModel : ViewModel() {
-
-
 
 
     private val _topLiveData = MutableLiveData(listOf<Diff>())
@@ -52,30 +48,29 @@ class MyViewModel : ViewModel() {
     }
 
 
-    fun initCode(){
+    fun initCode() {
         _progressBarVisibility.value = View.VISIBLE
         initFundCoro()
         getHoliday()
-        codes= emptyList()
+        codes = emptyList()
         viewModelScope.launch {
-            val ktDao = KtDatabase.dataBase.getDao()
+
             ktDao.getCodes()?.let {
                 Log.d(TAG, "initCode: $it")
-                codes=it
+                codes = it
                 initSelectedFundCoro()
             }
         }
     }
 
 
-
-     fun initFundCoro(){
-        val  api = Push2api
+    fun initFundCoro() {
+        val api = Push2api
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = api.getfunds(getExponentMap())
-                if (response.isSuccessful){
-                   val topBean = response.body()
+                if (response.isSuccessful) {
+                    val topBean = response.body()
                     topBean?.let {
                         val diffBeanList: List<Diff> = it.data.diff
                         Log.d(TAG, "initFundCoro: $diffBeanList")
@@ -85,8 +80,8 @@ class MyViewModel : ViewModel() {
                         _topLiveData.postValue(diffBeanList)
                     }
                 }
-            }catch (e:Exception){
-                Log.e(TAG, "initFundCoro: ${e.message}",e )
+            } catch (e: Exception) {
+                Log.e(TAG, "initFundCoro: ${e.message}", e)
             }
         }
     }
@@ -122,12 +117,12 @@ class MyViewModel : ViewModel() {
     private suspend fun setLiveCollection(b: Data, code: String): CollectionBean? {
 
         MyLog.d(TAG, "setLiveCollection: $code")
-        if(code.isNotEmpty()){
+        if (code.isNotEmpty()) {
             var entity: FoudInfoEntity?
-            val collectionBean = viewModelScope.async{
-                val foudInfoDao= KtDatabase.dataBase.getDao()
-                entity= foudInfoDao.findByCode(code)
-                Log.d(TAG, "setLiveCollection:FindByCode "+ (entity?.code ?: 0))
+            val collectionBean = viewModelScope.async {
+
+                entity = ktDao.findByCode(code)
+                Log.d(TAG, "setLiveCollection:FindByCode " + (entity?.code ?: 0))
                 entity?.let {
                     val 持有份额: Double = entity!!.quantity //持有份额
                     val 成本价: Double = entity!!.cost //成本价
@@ -209,14 +204,13 @@ class MyViewModel : ViewModel() {
 //            fo = StringBuilder(fo.substring(0, fo.length - 1))
 //        }
         return try {
-            val fo:StringBuilder = list.splitWithComma
+            val fo: StringBuilder = list.splitWithComma
             fo.deleteLastChar
-        }catch (e :Exception){
+        } catch (e: Exception) {
             String()
         }
 
     }
-
 
 
     /**
@@ -286,8 +280,8 @@ class MyViewModel : ViewModel() {
             val res = gszdf * last * quantity
             MyLog.d(TAG, "getGssy: $res")
             return res.percentFomart
-        }catch (e: Exception){
-            MyLog.e(TAG,"getGssy"+e.message)
+        } catch (e: Exception) {
+            MyLog.e(TAG, "getGssy" + e.message)
             return ""
         }
 
@@ -302,7 +296,7 @@ class MyViewModel : ViewModel() {
      * @return 估算收益
      */
 
-    private fun getSy(gszzl: String, quantity: Double, nav: String):String{
+    private fun getSy(gszzl: String, quantity: Double, nav: String): String {
         try {
             if (gszzl == "--") {
                 return "0.0"
@@ -311,32 +305,34 @@ class MyViewModel : ViewModel() {
             var gszdf = gszzl.toDouble()
             MyLog.d(TAG, "zdf: $gszdf")
             gszdf *= 0.01
-            val res =  quantity*(today-(today/(1+gszdf)))
+            val res = quantity * (today - (today / (1 + gszdf)))
             MyLog.d(TAG, "getGssy: $res")
             return res.percentFomart
-        }catch (e: Exception){
-            MyLog.e(TAG,"getGssy"+e.message)
+        } catch (e: Exception) {
+            MyLog.e(TAG, "getGssy" + e.message)
             return ""
         }
     }
 
 
-    fun initSelectedFundCoro(){
+    fun initSelectedFundCoro() {
         val api = Fundmobapi
-        viewModelScope.launch (Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 _progressBarVisibility.postValue(View.GONE)
                 val response = api.getSellected(getSellectionMap())
-                if (response.isSuccessful){
-                    val selectionBean =response.body()
+                if (response.isSuccessful) {
+                    val selectionBean = response.body()
                     selectionBean?.let {
-                        it.Datas?.let { it1 -> setSelectionData(it1)
-                            Log.d(TAG, "initSelectedFundCoro: "+it1.size)}
+                        it.Datas?.let { it1 ->
+                            setSelectionData(it1)
+                            Log.d(TAG, "initSelectedFundCoro: " + it1.size)
+                        }
                     }
                 }
 
-            }catch (e:Exception){
-                Log.e(TAG, "initSelectedFundCoro: ",e)
+            } catch (e: Exception) {
+                Log.e(TAG, "initSelectedFundCoro: ", e)
 
             }
         }
@@ -363,7 +359,8 @@ class MyViewModel : ViewModel() {
                     val timer = Timer()
                     if (LocalTime.now().isAfter(LocalTime.of(9, 30)) && LocalTime.now().isBefore(
                             LocalTime.of(15, 0)
-                        )) {
+                        )
+                    ) {
                         MyLog.d(TAG, "Redo:2")
                         val timerTask: TimerTask = object : TimerTask() {
                             override fun run() {
@@ -392,8 +389,6 @@ class MyViewModel : ViewModel() {
 
         }
     }
-
-
 
 
 }

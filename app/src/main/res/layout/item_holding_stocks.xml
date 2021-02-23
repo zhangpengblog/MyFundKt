@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="horizontal"
     android:padding="5dp">
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -38,6 +38,7 @@
         android:textAlignment="textEnd"
         android:theme="@style/MaterialAlertDialog.MaterialComponents.Title.Text"
         tools:text="xxxname" />
+
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/change"
         android:layout_width="match_parent"

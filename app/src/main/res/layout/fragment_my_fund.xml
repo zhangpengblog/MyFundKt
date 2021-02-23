@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.fragment.myfund.MyFundFragment">
-<com.scwang.smartrefresh.layout.SmartRefreshLayout
-    android:id="@+id/refreshLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ui.fragment.myfund.MyFundFragment">
 
-    <com.scwang.smartrefresh.layout.header.ClassicsHeader
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent">
 
-
+        <com.scwang.smartrefresh.layout.header.ClassicsHeader
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
 
         <androidx.core.widget.NestedScrollView
@@ -196,9 +194,8 @@
         </androidx.core.widget.NestedScrollView>
 
 
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
-
-</com.scwang.smartrefresh.layout.SmartRefreshLayout>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
