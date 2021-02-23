@@ -11,6 +11,7 @@ import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -238,7 +239,7 @@ class MyFundFragment : Fragment() {
                         binding.holding.apply {
                             text = it
                             if (it.contains("-")) {
-                                setTextColor(Color.GREEN)
+                                setTextColor( ContextCompat.getColor(requireContext(),R.color.green))
                             } else {
                                 setTextColor(Color.RED)
                             }
@@ -250,7 +251,7 @@ class MyFundFragment : Fragment() {
                         binding.holdingD.apply {
                             text = it
                             if (it.contains("-")) {
-                                setTextColor(Color.GREEN)
+                                setTextColor( ContextCompat.getColor(requireContext(),R.color.green))
                             } else {
                                 setTextColor(Color.RED)
                             }
@@ -263,7 +264,7 @@ class MyFundFragment : Fragment() {
                         binding.todayD.apply {
                             text = it
                             if (it.contains("-")) {
-                                setTextColor(Color.GREEN)
+                                setTextColor( ContextCompat.getColor(requireContext(),R.color.green))
                             } else {
                                 setTextColor(Color.RED)
                             }
@@ -275,7 +276,7 @@ class MyFundFragment : Fragment() {
                         binding.today.apply {
                             text = it
                             if (it.contains("-")) {
-                                setTextColor(Color.GREEN)
+                                setTextColor( ContextCompat.getColor(requireContext(),R.color.green))
                             } else {
                                 setTextColor(Color.RED)
                             }

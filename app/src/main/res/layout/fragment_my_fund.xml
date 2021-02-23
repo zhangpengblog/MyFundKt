@@ -6,7 +6,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/LTGRAY"
     tools:context=".ui.fragment.myfund.MyFundFragment">
 <com.scwang.smartrefresh.layout.SmartRefreshLayout
     android:id="@+id/refreshLayout"
@@ -177,10 +176,11 @@
                         android:fillViewport="true"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/roundRelativeLayout"
                         app:layout_constraintVertical_bias="0.0"
-                        tools:listitem="@layout/item_my_fund"/>
+                        tools:listitem="@layout/item_my_fund" />
 
                     <ProgressBar
                         android:id="@+id/progressBar"

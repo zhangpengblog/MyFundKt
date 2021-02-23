@@ -22,9 +22,9 @@ class TopAdapter(diff: MutableList<Diff>?) :
 
         val change: String = item.f3.toString() + "%"
         if (change.contains("-")) {
-            holder.setTextColor(R.id.socre, Color.GREEN)
-                .setTextColor(R.id.change, Color.GREEN)
-                .setTextColor(R.id.change2, Color.GREEN)
+            holder.setTextColorRes(R.id.socre, R.color.green)
+                .setTextColorRes(R.id.change, R.color.green)
+                .setTextColorRes(R.id.change2, R.color.green)
 //            holder.itemView.outlineSpotShadowColor = Color.GREEN
         } else {
             holder.setTextColor(R.id.socre, Color.RED)

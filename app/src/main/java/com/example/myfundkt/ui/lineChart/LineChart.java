@@ -350,7 +350,7 @@ public class LineChart extends View {
             float textStartY = mSelfHeight - verticalSpaceBottom - i * oneLevelValueHeight + fontHeight;
             String text2 = String.format(levelFormat, getMinData() + (getMaxData() - getMinData()) / levels * i)+"%";
             if (text2.contains("-")){
-                mPaint.setColor(Color.GREEN);
+                mPaint.setColor(0xFF00880E);//green
             }else {
                 mPaint.setColor(Color.RED);
             }

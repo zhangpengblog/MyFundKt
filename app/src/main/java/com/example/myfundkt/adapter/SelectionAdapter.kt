@@ -3,6 +3,7 @@ package com.example.myfundkt.adapter
 import android.graphics.Color
 import android.os.Build
 import android.view.View
+import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.listener.OnItemLongClickListener
@@ -34,7 +35,7 @@ class SelectionAdapter(CollectionBean: MutableList<CollectionBean>?): BaseQuickA
 
             涨跌幅?.let {
                 if (it.contains("-")){
-                    holder.setTextColor(R.id.zdf, Color.GREEN)
+                    holder.setTextColorRes(R.id.zdf, R.color.green)
                 } else {
                     holder.setTextColor(R.id.zdf, Color.RED)
                 }
@@ -43,21 +44,21 @@ class SelectionAdapter(CollectionBean: MutableList<CollectionBean>?): BaseQuickA
 
             持有收益?.let {
                 if (it.contains("-")) {
-                    holder.setTextColor(R.id.cysy, Color.GREEN)
+                    holder.setTextColorRes(R.id.cysy, R.color.green)
                 } else {
                     holder.setTextColor(R.id.cysy, Color.RED)
                 }
             }
             估算收益?.let {
                 if (it.contains("-")) {
-                    holder.setTextColor(R.id.gssy, Color.GREEN)
+                    holder.setTextColorRes(R.id.gssy, R.color.green)
                 } else {
                     holder.setTextColor(R.id.gssy, Color.RED)
                 }
             }
             持有收益率?.let {
                 if (it.contains("-")) {
-                    holder.setTextColor(R.id.cysyl, Color.GREEN)
+                    holder.setTextColorRes(R.id.cysyl, R.color.green)
                 } else {
                     holder.setTextColor(R.id.cysyl, Color.RED)
                 }
@@ -74,5 +75,4 @@ class SelectionAdapter(CollectionBean: MutableList<CollectionBean>?): BaseQuickA
 
     }
 }
-
 

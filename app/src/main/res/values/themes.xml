@@ -13,10 +13,13 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="backGroundColor">@color/white</item>
+        <item name="android:windowBackground">@color/LTGRAY</item>
 
     </style>
     <style name="fullScreen" parent="Theme.MyFundKt">
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
     </style>
+
+
 </resources>

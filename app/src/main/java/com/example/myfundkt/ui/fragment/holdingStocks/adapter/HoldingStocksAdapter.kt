@@ -27,12 +27,12 @@ class HoldingStocksAdapter(holdingDatas: MutableList<HoldingData>?) : BaseQuickA
                 .setText(R.id.price,price.toString())
                 .setText(R.id.zdf,ZD)
             if (change.contains("-")){
-                holder.setTextColor(R.id.change, Color.GREEN)
+                holder.setTextColorRes(R.id.change, R.color.green)
             }else{
                 holder.setTextColor(R.id.change, Color.RED)
             }
             if (ZD.contains("-")){
-                holder.setTextColor(R.id.zdf, Color.GREEN)
+                holder.setTextColorRes(R.id.zdf, R.color.green)
             }else{
                 holder.setTextColor(R.id.zdf, Color.RED)
             }
