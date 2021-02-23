@@ -13,6 +13,7 @@ import com.example.myfundkt.http.GetRetrofit
 import com.example.myfundkt.http.KtApi
 import com.example.myfundkt.http.response.FundVarietieValuationDetailResponse
 import com.example.myfundkt.ui.lineChart.LineChart
+import com.example.myfundkt.utils.Fundmobapi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -41,54 +42,15 @@ class FundInfoViewModel : ViewModel() {
 
 
 
-//    fun initSellectionFund(FCODE:String) {
-//        _progressBarVisibility.value = View.VISIBLE
-//        Log.d(TAG, "initSellectionFund: "+FCODE)
-//        object : FundVarietieValuationDetailResponse(
-//            GetRetrofit.getFundmobapi().create(Api::class.java).getLineData(
-//                FCODE,
-//                "Wap",
-//                "Wap",
-//                "EFund",
-//                "2.0.0",
-//                "1612339403432"
-//            )
-//        ){
-//            override fun onSuccess(informationData: InformationData) {
-//                _progressBarVisibility.value = View.GONE
-//                _expansion.value = informationData.expansion
-//                val lineData : List<String>? = informationData.datas
-//                if (lineData != null) {
-//                    print("lineData.size"+lineData.size)
-//                }
-//                //昨日收价
-//                val mid: Float = informationData.expansion?.dWJZ?.toFloat()!!
-//                _start.value = mid
-//                var temp: Float = mid
-//                var dataTemp = mutableListOf<LineChart.Data<Float>>()
-//                lineData?.forEach { s: String ->
-//                   val strArray = s.split(",");
-//                    val zd:Float = strArray[2].toFloat()
-//                    temp *= (1 + zd)
-//                    val value = mid*(1+(zd/100))
-//                    //序号，时间，涨跌
-//                    dataTemp.add(LineChart.Data<Float>(zd,value, strArray[1]))
-//
-//                }
-//
-//                _data.value = dataTemp
-//
-//            }
-//        }
-//    }
+
 
     fun initSellectionFundCoro(FCODE: String) {
         _progressBarVisibility.value = View.VISIBLE
 
-        Log.d(TAG, "initSellectionFund: " + FCODE)
+        Log.d(TAG, "initSellectionFund: $FCODE")
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val api = GetRetrofit.getFundmobapi().create(KtApi::class.java)
+                val api = Fundmobapi
                 val response = api.getLineData(
                     FCODE,
                     "Wap",

@@ -6,6 +6,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.example.myfundkt.R
 import com.example.myfundkt.bean.holdingStocks.FundStock
 import com.example.myfundkt.bean.holdingStocks.HoldingData
+import com.example.myfundkt.utils.DKGREEN
 
 var format = "%.2f"
 class HoldingStocksAdapter(holdingDatas: MutableList<HoldingData>?) : BaseQuickAdapter<HoldingData, BaseViewHolder>(
@@ -18,21 +19,21 @@ class HoldingStocksAdapter(holdingDatas: MutableList<HoldingData>?) : BaseQuickA
             var proportion =""
             var change =""
             var ZD=""
-            PCTNVCHG?.let { change = it+"%" }
-            JZBL?.let {proportion = it+"%" }
-            zdf?.let { ZD =it.toString()+"%" }
+            PCTNVCHG?.let { change = "$it%" }
+            JZBL?.let {proportion = "$it%" }
+            zdf?.let { ZD = "$it%" }
             holder.setText(R.id.nameAndcode,nameAndCode)
                 .setText(R.id.change,change)
                 .setText(R.id.proportion,proportion)
                 .setText(R.id.price,price.toString())
                 .setText(R.id.zdf,ZD)
             if (change.contains("-")){
-                holder.setTextColorRes(R.id.change, R.color.green)
+                holder.setTextColor(R.id.change, DKGREEN)
             }else{
                 holder.setTextColor(R.id.change, Color.RED)
             }
             if (ZD.contains("-")){
-                holder.setTextColorRes(R.id.zdf, R.color.green)
+                holder.setTextColor(R.id.zdf, DKGREEN)
             }else{
                 holder.setTextColor(R.id.zdf, Color.RED)
             }

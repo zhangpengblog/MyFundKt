@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myfundkt.db.DbRepository
 import com.example.myfundkt.db.KtDatabase
 import com.example.myfundkt.db.entity.FoudInfoEntity
 import kotlinx.coroutines.Dispatchers
@@ -20,14 +19,14 @@ class EditViewModel : ViewModel() {
 //        _foudInfoEntity.value = repository.FindByCode(code)
         viewModelScope.launch(Dispatchers.IO){
             val ktDao=KtDatabase.dataBase.getDao()
-            _foudInfoEntity.postValue(ktDao.FindByCode(code))
+            _foudInfoEntity.postValue(ktDao.findByCode(code))
         }
     }
     fun update(foundInfoEntity: FoudInfoEntity){
 //        repository.Update(foundInfoEntity)
         viewModelScope.launch {
             val ktDao =KtDatabase.dataBase.getDao()
-            ktDao.UpdateFoudInfo(foundInfoEntity)
+            ktDao.updateFundInfo(foundInfoEntity)
         }
     }
 

@@ -35,7 +35,7 @@ class ImportDataViewModel : ViewModel() {
                     }
                     viewModelScope.launch(Dispatchers.IO){
                         val foudInfoDao= KtDatabase.dataBase.getDao()
-                        foudInfoDao.insertFoudInfo(fundEntity)
+                        foudInfoDao.insertFundInfo(fundEntity)
                     }
 //                    repository.InsertInfo(fundEntity)
                 }

@@ -14,6 +14,8 @@ import com.example.myfundkt.http.GetRetrofit
 import com.example.myfundkt.http.KtApi
 import com.example.myfundkt.http.response.HoldingStocksResponse
 import com.example.myfundkt.http.response.QtResponse
+import com.example.myfundkt.utils.Fundmobapi
+import com.example.myfundkt.utils.Push2api
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
@@ -33,36 +35,14 @@ class HoldingStocksViewModel : ViewModel() {
     private val _progressBarVisibility = MutableLiveData(View.VISIBLE)
     val progressBarVisibility: LiveData<Int> = _progressBarVisibility
 
-//   fun getStocks(code: String){
-//       _progressBarVisibility.value = View.VISIBLE
-//       object : HoldingStocksResponse(
-//           GetRetrofit.getFundmobapi().create(Api::class.java).getHoldingStocks(code,"Wap","Wap","EFund","2.0.0",
-//           "",System.currentTimeMillis().toString())
-//       ) {
-//
-//           override fun onSuccess(it: List<FundStock>) {
-//               it?.let {
-//
-//                   _stocksData.value = it
-//                   it.forEach{
-//                       it.GPDM?.let { it1 -> _GPDM.add(it.NEWTEXCH+"."+it1)}
-//
-//                   }
-//                   initQt(_GPDM)
-//
-//               }
-//
-//
-//           }
-//       }
-//   }
+
 
     fun getStocksCoro(code: String?){
         _progressBarVisibility.value = View.VISIBLE
         _stocksData.value = null
         viewModelScope.launch(Dispatchers.IO){
             try {
-                val api =GetRetrofit.getFundmobapi().create(KtApi::class.java)
+                val api = Fundmobapi
                 val response = api.getHoldingStocks(code,"Wap","Wap","EFund","2.0.0",
                     "",System.currentTimeMillis().toString())
                 if (response.isSuccessful){
@@ -93,50 +73,7 @@ class HoldingStocksViewModel : ViewModel() {
     }
 
 
-//    fun initQt(mutableList: MutableList<String>) {
-//        var string = ""
-//        mutableList.forEach{
-//           string += "$it,"
-//        }
-//
-//        Log.d(TAG, "initQt: "+ string)
-//        val map = HashMap<String, String>()
-//        map["fltt"] = "2"
-//        map["fields"] = "f1,f2,f3,f4,f12,f13,f14,f292"
-//        map["_"] = System.currentTimeMillis().toString()
-//        map["deviceid"] = "Wap"
-//        map["plat"]= "Wap"
-//        map["product"] ="EFund"
-//        map["version"]="2.0.0"
-//        map["secids"] = string
-//
-//        object : QtResponse(
-//            GetRetrofit.getPush2().create(Api::class.java).getQT(map)
-//        ) {
-//            override fun onSuccess(total: Int, diffBeanList: List<Diff>) {
-//                _progressBarVisibility.value = View.GONE
-//                Log.d(TAG, "onSuccess: "+diffBeanList)
-//                _holdingData.value = listOf()
-//                _qtLiveData.value = diffBeanList
-//                val holdingList = mutableListOf<HoldingData>()
-//                diffBeanList.forEach{
-//                    val holding:HoldingData= HoldingData()
-//
-//                    holding.price=it.f2
-//                    holding.zdf=it.f3
-//                    _stocksData.value?.forEach { it1->
-//                        if (it.f14.equals(it1.GPJC)){
-//                            holding.nameAndCode =it1.GPJC+"("+it1.GPDM+")"
-//                            holding.JZBL=it1.JZBL
-//                            holding.PCTNVCHG=it1.PCTNVCHG
-//                            holdingList.add(holding)
-//                        }
-//                    }
-//                }
-//                _holdingData.value=holdingList
-//            }
-//        }
-//    }
+
 
     fun initQtCoro(mutableList: MutableList<String>){
         var string = ""
@@ -155,7 +92,7 @@ class HoldingStocksViewModel : ViewModel() {
         map["version"]="2.0.0"
         map["secids"] = string
 
-        val api = GetRetrofit.getPush2().create(KtApi::class.java)
+        val api = Push2api
         viewModelScope.launch(Dispatchers.IO) {
             _holdingData.postValue(null)
             _qtLiveData.postValue(listOf())

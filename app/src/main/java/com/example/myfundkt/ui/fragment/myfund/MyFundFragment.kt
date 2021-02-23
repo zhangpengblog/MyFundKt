@@ -11,7 +11,6 @@ import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -29,8 +28,10 @@ import com.example.myfundkt.databinding.FragmentMyFundBinding
 import com.example.myfundkt.db.KtDatabase
 import com.example.myfundkt.db.entity.FoudInfoEntity
 import com.example.myfundkt.ui.MyViewModel
+import com.example.myfundkt.utils.DKGREEN
+import com.example.myfundkt.utils.LongSnack
 import com.example.myfundkt.utils.MyLog
-import com.google.android.material.snackbar.Snackbar
+import com.example.myfundkt.utils.ShortSnack
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -155,7 +156,7 @@ class MyFundFragment : Fragment() {
         val code = fund.代码
         lifecycleScope.launch{
             val ktDao=KtDatabase.dataBase.getDao()
-            val entity=ktDao.FindByCode(code?:"0")
+            val entity=ktDao.findByCode(code?:"0")
             val id = entity?.id
             activity?.let {
                 AlertDialog.Builder(it).setMessage("删除").setPositiveButton("删除"
@@ -239,7 +240,7 @@ class MyFundFragment : Fragment() {
                         binding.holding.apply {
                             text = it
                             if (it.contains("-")) {
-                                setTextColor( ContextCompat.getColor(requireContext(),R.color.green))
+                                setTextColor( DKGREEN)
                             } else {
                                 setTextColor(Color.RED)
                             }
@@ -251,7 +252,7 @@ class MyFundFragment : Fragment() {
                         binding.holdingD.apply {
                             text = it
                             if (it.contains("-")) {
-                                setTextColor( ContextCompat.getColor(requireContext(),R.color.green))
+                                setTextColor(DKGREEN)
                             } else {
                                 setTextColor(Color.RED)
                             }
@@ -264,7 +265,7 @@ class MyFundFragment : Fragment() {
                         binding.todayD.apply {
                             text = it
                             if (it.contains("-")) {
-                                setTextColor( ContextCompat.getColor(requireContext(),R.color.green))
+                                setTextColor(DKGREEN)
                             } else {
                                 setTextColor(Color.RED)
                             }
@@ -276,7 +277,7 @@ class MyFundFragment : Fragment() {
                         binding.today.apply {
                             text = it
                             if (it.contains("-")) {
-                                setTextColor( ContextCompat.getColor(requireContext(),R.color.green))
+                                setTextColor(DKGREEN)
                             } else {
                                 setTextColor(Color.RED)
                             }
@@ -313,8 +314,7 @@ class MyFundFragment : Fragment() {
             val s2 = editText2.text.toString()
             val s3 = editText3.text.toString()
             if (s1.isEmpty() || s2.isEmpty() || s3.isEmpty()) {
-                Snackbar.make(requireView(), "不能为空", Snackbar.LENGTH_SHORT)
-                    .setAction("Action", null).show()
+                "不能为空".ShortSnack(requireView())
             } else {
                 val cost = s2.toDouble()
                 val quantity = s3.toDouble()
@@ -324,13 +324,11 @@ class MyFundFragment : Fragment() {
                     val foudInfoDao=KtDatabase.dataBase.getDao()
                     with(foudInfoDao){
                        val amount= getCodes()?.size
-                        insertFoudInfo(foudInfoEntity)
+                        insertFundInfo(foudInfoEntity)
                         if (amount == getCodes()?.size) {
-                            Snackbar.make(requireView(), "添加失败", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show()
+                            "添加失败".LongSnack(requireView())
                         } else {
-                            Snackbar.make(requireView(), "添加成功", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show()
+                            "添加成功".LongSnack(requireView())
                             dialog.dismiss()
                         }
                     }

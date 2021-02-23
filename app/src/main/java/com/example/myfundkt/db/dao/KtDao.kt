@@ -7,16 +7,16 @@ import com.example.myfundkt.db.entity.FoudInfoEntity
 interface KtDao {
     /*发生冲突时覆盖*/
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFoudInfo(vararg foudInfoEntities: FoudInfoEntity?)
+    suspend fun insertFundInfo(vararg foudInfoEntities: FoudInfoEntity?)
 
     @Query("SELECT code from mydb")
     suspend fun getCodes(): List<String>?
 
     @Query("SELECT * from mydb WHERE code = :s")
-    suspend fun FindByCode(s: String): FoudInfoEntity?
+    suspend fun findByCode(s: String): FoudInfoEntity?
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun UpdateFoudInfo(vararg foudInfoEntities: FoudInfoEntity?): Int
+    suspend fun updateFundInfo(vararg foudInfoEntities: FoudInfoEntity?): Int
 
     @Delete
     suspend fun delete(vararg foudInfoEntities: FoudInfoEntity?)

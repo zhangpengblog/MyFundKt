@@ -11,13 +11,13 @@ import com.example.myfundkt.db.KtDatabase
 import com.example.myfundkt.db.entity.FoudInfoEntity
 import com.example.myfundkt.http.Api
 import com.example.myfundkt.http.GetRetrofit
-import com.example.myfundkt.http.KtApi
 import com.example.myfundkt.http.response.HolidayResponse
-import com.example.myfundkt.utils.MyLog
+import com.example.myfundkt.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.util.*
@@ -57,11 +57,10 @@ class MyViewModel : ViewModel() {
         initFundCoro()
         getHoliday()
         codes= emptyList()
-//        codes.addAll(repository.GetCodes())
         viewModelScope.launch {
             val ktDao = KtDatabase.dataBase.getDao()
             ktDao.getCodes()?.let {
-                Log.d(TAG, "initCode: "+it)
+                Log.d(TAG, "initCode: $it")
                 codes=it
                 initSelectedFundCoro()
             }
@@ -69,24 +68,9 @@ class MyViewModel : ViewModel() {
     }
 
 
-//    fun initIndexFund() {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            object : QtResponse(
-//                GetRetrofit.getPush2().create(Api::class.java).getQT(getExponentMap())
-//            ) {
-//                override fun onSuccess(total: Int, diffBeanList: List<Diff>) {
-//                    if (codes.size == 0){
-//                        _progressBarVisibility.value = View.GONE
-//                    }
-//                    _topLiveData.value = diffBeanList
-//                }
-//            }
-//        }
-//
-//    }
 
      fun initFundCoro(){
-        val  api = GetRetrofit.getPush2().create(KtApi::class.java)
+        val  api = Push2api
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = api.getfunds(getExponentMap())
@@ -95,7 +79,7 @@ class MyViewModel : ViewModel() {
                     topBean?.let {
                         val diffBeanList: List<Diff> = it.data.diff
                         Log.d(TAG, "initFundCoro: $diffBeanList")
-                        if (codes.size == 0) {
+                        if (codes.isEmpty()) {
                             _progressBarVisibility.postValue(View.GONE)
                         }
                         _topLiveData.postValue(diffBeanList)
@@ -127,9 +111,9 @@ class MyViewModel : ViewModel() {
                     list.add(bean)
                 }
             }
-            Log.d(TAG, "setSelectionData: "+list)
-            _collection.postValue(null)
-            _collection.postValue(list)
+            Log.d(TAG, "setSelectionData: $list")
+//            _collection.postValue(null)
+            _collection.postValue(list.sortByMoneyDes)
 
 
         }
@@ -137,12 +121,12 @@ class MyViewModel : ViewModel() {
 
     private suspend fun setLiveCollection(b: Data, code: String): CollectionBean? {
 
-        MyLog.d(TAG, "setLiveCollection: "+code)
+        MyLog.d(TAG, "setLiveCollection: $code")
         if(code.isNotEmpty()){
             var entity: FoudInfoEntity? =null
             val collectionBean = viewModelScope.async{
                 val foudInfoDao= KtDatabase.dataBase.getDao()
-                entity= foudInfoDao.FindByCode(code)
+                entity= foudInfoDao.findByCode(code)
                 Log.d(TAG, "setLiveCollection:FindByCode "+ (entity?.code ?: 0))
                 entity?.let {
                     val 持有份额: Double = entity!!.quantity //持有份额
@@ -151,31 +135,32 @@ class MyViewModel : ViewModel() {
                     val 估算涨跌: String = b.GSZZL//估算涨跌
                     val 代码 = b.FCODE
                     val 名称 = b.SHORTNAME
-                    val 时间 = b.GZTIME.substring(IntRange(10,15))
+                    val 时间 = b.GZTIME.substring(IntRange(10, 15))
                     val 涨跌幅: String = b.NAVCHGRT //涨跌幅
                     val 持有额 = getCye(昨日价, 持有份额) //持有额
                     val 持有收益 = getCysy(昨日价, 持有份额, 成本价) //持有收益
                     val 持有收益率 = getCysyl(昨日价, 成本价) //持有收益率
-                    var 估算收益 ="" //估算收益
-                    Log.d(TAG, "setLiveCollection: "+b.PDATE)
-                    Log.d(TAG, "setLiveCollection:时间 "+时间)
+                    var 估算收益 = "" //估算收益
+                    Log.d(TAG, "setLiveCollection: " + b.PDATE)
+                    Log.d(TAG, "setLiveCollection:时间 $时间")
 
                     var 涨跌 = ""
-                    var updated =false
-                    if (b.PDATE .equals(b.GZTIME.substring(IntRange(0,9)))){//已结算
+                    var updated = false
+                    if (b.PDATE == b.GZTIME.substring(IntRange(0, 9))) {//已结算
                         Log.d(TAG, "setLiveCollection: 已结算")
-                        估算收益 =getSy(涨跌幅, 持有份额, 昨日价)
-                        涨跌=涨跌幅
+                        估算收益 = getSy(涨跌幅, 持有份额, 昨日价)
+                        涨跌 = 涨跌幅
                         updated = true
-                    }else{
+                    } else {
                         Log.d(TAG, "setLiveCollection: 未结算")
                         估算收益 = getGssy(估算涨跌, 持有份额, 昨日价)
-                        涨跌=估算涨跌
+                        涨跌 = 估算涨跌
                     }
 
-                    val bean = CollectionBean(代码,名称,String.format("%.2f", 持有份额),持有额,持有收益,持有收益率+"%",
-                        涨跌+"%",估算收益,时间,updated)
-                    return@async bean
+                    return@async CollectionBean(
+                        代码, 名称, 持有份额.percentFomart, 持有额, 持有收益, "$持有收益率%",
+                        "$涨跌%", 估算收益, 时间, updated
+                    )
                 }
             }
             return collectionBean.await()
@@ -186,17 +171,18 @@ class MyViewModel : ViewModel() {
 
     }
 
-    fun getExponentMap(): HashMap<String, String> {
+    private fun getExponentMap(): HashMap<String, String> {
         val map = HashMap<String, String>()
         map["fltt"] = "2"
         map["fields"] = "f2,f3,f4,f12,f13,f14"
         map["_"] = System.currentTimeMillis().toString()
         map["secids"] = "1.000001,1.000300,100.HSI,0.399001,0.399006"
         return map
+
     }
 
-    fun getSellectionMap(): HashMap<String, String> {
-        Log.d(TAG, "getSellectionMap: "+codes)
+    private fun getSellectionMap(): HashMap<String, String> {
+        Log.d(TAG, "getSellectionMap: $codes")
         val map =
             HashMap<String, String>()
         map["pageIndex"] = "1"
@@ -207,22 +193,31 @@ class MyViewModel : ViewModel() {
         map["Version"] = "1"
         map["deviceid"] = "ee11bd80-fa55-417d-b155-9eb08fc131ed"
         map["Fcodes"] = formatCode(codes)
-        Log.d(TAG, "formatCode: "+ map["Fcodes"])
+        Log.d(TAG, "formatCode: ${map["Fcodes"]}")
         return map
 
     }
 
 
     private fun formatCode(list: List<String>): String {
-        var fo = StringBuilder()
-        for (s in list) {
-            fo.append(s).append(",")
+//        var fo = StringBuilder()
+//        for (s in list) {
+//            fo.append(s).append(",")
+//        }
+//        if (fo.isNotEmpty()) {
+//            fo.deleteLastChar
+//            fo = StringBuilder(fo.substring(0, fo.length - 1))
+//        }
+        return try {
+            val fo:StringBuilder = list.splitWithComma
+            fo.deleteLastChar
+        }catch (e :Exception){
+            String()
         }
-        if (fo.isNotEmpty()) {
-            fo = StringBuilder(fo.substring(0, fo.length - 1))
-        }
-        return fo.toString()
+
     }
+
+
 
     /**
      * 持有额=last价*持有份额
@@ -236,7 +231,7 @@ class MyViewModel : ViewModel() {
         val last = nav.toDouble()
         val res = last * quantity
         MyLog.d(TAG, "getCye: $res")
-        return String.format("%.2f", res)
+        return res.percentFomart
     }
 
     /**
@@ -252,7 +247,7 @@ class MyViewModel : ViewModel() {
         val last = nav.toDouble()
         val res = (last - cost) * quantity
         MyLog.d(TAG, "getCysy: $res")
-        return String.format("%.2f", res)
+        return res.percentFomart
     }
 
     /**
@@ -268,7 +263,7 @@ class MyViewModel : ViewModel() {
         var res = (last - cost) / cost
         res *= 100
         MyLog.d(TAG, "getCysyl: $res")
-        return String.format("%.2f", res)
+        return res.percentFomart
     }
 
     /**
@@ -290,7 +285,7 @@ class MyViewModel : ViewModel() {
             gszdf *= 0.01
             val res = gszdf * last * quantity
             MyLog.d(TAG, "getGssy: $res")
-            return String.format("%.2f", res)
+            return res.percentFomart
         }catch (e: Exception){
             MyLog.e(TAG,"getGssy"+e.message)
             return ""
@@ -318,38 +313,16 @@ class MyViewModel : ViewModel() {
             gszdf *= 0.01
             val res =  quantity*(today-(today/(1+gszdf)))
             MyLog.d(TAG, "getGssy: $res")
-            return String.format("%.2f", res)
+            return res.percentFomart
         }catch (e: Exception){
             MyLog.e(TAG,"getGssy"+e.message)
             return ""
         }
     }
 
-//    fun initSellectionFund() {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            object : BottomsResponse(
-//                GetRetrofit.getFundmobapi().create(Api::class.java).getBottoms(
-//                    getSellectionMap()
-//                )
-//            ){
-//                override fun onError() {
-//
-//                }
-//
-//                override fun onSuccess(it: List<Data>){
-//                    _progressBarVisibility.value = View.GONE
-//                    it.let {
-//                        setSelectionData(it)
-//                    }
-//
-//                }
-//            }
-//        }
-//
-//    }
 
     fun initSelectedFundCoro(){
-        val api = GetRetrofit.getFundmobapi().create(KtApi::class.java)
+        val api = Fundmobapi
         viewModelScope.launch (Dispatchers.IO){
             try {
                 _progressBarVisibility.postValue(View.GONE)
@@ -405,7 +378,7 @@ class MyViewModel : ViewModel() {
                         }
                         timer.schedule(
                             timerTask,
-                            60000,  //延迟10秒执行
+                            60000,  //延迟60秒执行
                             60000
                         ) //
                     } else {
