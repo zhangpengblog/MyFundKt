@@ -179,9 +179,7 @@ class MyFundFragment : Fragment() {
     private fun refreshData() {
         myViewModel.let {
             it.initCode()
-//            it.initIndexFund()
             it.initFundCoro()
-//            it.initSellectionFund()
             it.initSelectedFundCoro()
         }
 
@@ -193,10 +191,6 @@ class MyFundFragment : Fragment() {
 
         myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java).apply {
 
-//            initIndexFund()
-//            initFundCoro()
-//            initSelectedFundCoro()
-//            getHoliday()
 
             progressBarVisibility.observe(viewLifecycleOwner, {
                 binding.progressBar.visibility = it
@@ -228,14 +222,12 @@ class MyFundFragment : Fragment() {
                     }
                     binding.amount.apply {
                         setTextColor(Color.RED)
-                        String.format("%.2f", amount).let {
-                            text = it
-                        }
+                        text=amount.decimalFomart
                     }
 
 
                     //持有收益率
-                    (String.format("%.2f", (holding / amount) * 100) + "%").also {
+                    percentFomart(holding,amount).also {
                         binding.holding.apply {
                             text = it
                             if (it.contains("-")) {
@@ -247,7 +239,7 @@ class MyFundFragment : Fragment() {
                     }
 
                     //持有收益
-                    String.format("%.2f", holding).also {
+                    holding.decimalFomart.also {
                         binding.holdingD.apply {
                             text = it
                             if (it.contains("-")) {
@@ -260,7 +252,7 @@ class MyFundFragment : Fragment() {
                     }
 
                     //今日收益
-                    String.format("%.2f", today).also {
+                    today.decimalFomart.also {
                         binding.todayD.apply {
                             text = it
                             if (it.contains("-")) {
@@ -272,7 +264,7 @@ class MyFundFragment : Fragment() {
                     }
 
                     //今日收益率
-                    (String.format("%.2f", (today / amount) * 100) + "%").also {
+                    percentFomart(today ,amount).also {
                         binding.today.apply {
                             text = it
                             if (it.contains("-")) {

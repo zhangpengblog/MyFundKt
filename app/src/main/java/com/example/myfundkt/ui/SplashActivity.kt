@@ -31,7 +31,7 @@ class SplashActivity : AppCompatActivity() {
         this.finish()
     }
 
-    fun jump() {
+    private fun jump() {
         startActivity(Intent(this, MainActivity::class.java))
     }
 }

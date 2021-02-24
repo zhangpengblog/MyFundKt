@@ -25,11 +25,29 @@ val List<String>.splitWithComma: StringBuilder
 val DKGREEN: Int
     get() = 0xFF00880E.toInt()
 
-val Float.percentFomart
+val Float.decimalFomart
     get() = String.format("%.2f", this)
 
-val Double.percentFomart
+val Double.decimalFomart
     get() = String.format("%.2f", this)
+
+fun percentFomart (a:Float,b:Float):String{
+   return try {
+        ((a / b) * 100).decimalFomart+"%"
+    }catch (e:Exception){
+        ""
+    }
+}
+
+fun percentFomart (a:Double,b:Double):String{
+    return try {
+        ((a / b) * 100).decimalFomart+"%"
+    }catch (e:Exception){
+        ""
+    }
+}
+
+
 
 val Fundmobapi: KtApi
     get() = GetRetrofit.getFundmobapi().create(KtApi::class.java)

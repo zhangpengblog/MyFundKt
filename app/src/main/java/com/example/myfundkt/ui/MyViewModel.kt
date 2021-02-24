@@ -132,9 +132,9 @@ class MyViewModel : ViewModel() {
                     val 名称 = b.SHORTNAME
                     val 时间 = b.GZTIME.substring(IntRange(10, 15))
                     val 涨跌幅: String = b.NAVCHGRT //涨跌幅
-                    val 持有额 = getCye(昨日价, 持有份额) //持有额
-                    val 持有收益 = getCysy(昨日价, 持有份额, 成本价) //持有收益
-                    val 持有收益率 = getCysyl(昨日价, 成本价) //持有收益率
+                    val 持有额 = cye(昨日价, 持有份额) //持有额
+                    val 持有收益 = cysy(昨日价, 持有份额, 成本价) //持有收益
+                    val 持有收益率 = cysyl(昨日价, 成本价) //持有收益率
                     var 估算收益: String //估算收益
                     Log.d(TAG, "setLiveCollection: " + b.PDATE)
                     Log.d(TAG, "setLiveCollection:时间 $时间")
@@ -143,17 +143,17 @@ class MyViewModel : ViewModel() {
                     var updated = false
                     if (b.PDATE == b.GZTIME.substring(IntRange(0, 9))) {//已结算
                         Log.d(TAG, "setLiveCollection: 已结算")
-                        估算收益 = getSy(涨跌幅, 持有份额, 昨日价)
+                        估算收益 = sy(涨跌幅, 持有份额, 昨日价)
                         涨跌 = 涨跌幅
                         updated = true
                     } else {
                         Log.d(TAG, "setLiveCollection: 未结算")
-                        估算收益 = getGssy(估算涨跌, 持有份额, 昨日价)
+                        估算收益 = gssy(估算涨跌, 持有份额, 昨日价)
                         涨跌 = 估算涨跌
                     }
 
                     return@async CollectionBean(
-                        代码, 名称, 持有份额.percentFomart, 持有额, 持有收益, "$持有收益率%",
+                        代码, 名称, 持有份额.decimalFomart, 持有额, 持有收益, "$持有收益率%",
                         "$涨跌%", 估算收益, 时间, updated
                     )
                 }
@@ -220,13 +220,17 @@ class MyViewModel : ViewModel() {
      * @param quantity 持有份额
      * @return 持有额
      */
-    @SuppressLint("DefaultLocale")
-    private fun getCye(nav: String, quantity: Double): String {
-        val last = nav.toDouble()
-        val res = last * quantity
-        MyLog.d(TAG, "getCye: $res")
-        return res.percentFomart
+    private val cye = { nav: String, quantity: Double ->
+        try {
+            val last = nav.toDouble()
+            val res = last * quantity
+            MyLog.d(TAG, "getCye: $res")
+            res.decimalFomart
+        } catch (e: Exception) {
+            ""
+        }
     }
+
 
     /**
      * 持有收益=（last价-成本价）*份额
@@ -236,13 +240,17 @@ class MyViewModel : ViewModel() {
      * @param cost     成本
      * @return 持有收益
      */
-    @SuppressLint("DefaultLocale")
-    private fun getCysy(nav: String, quantity: Double, cost: Double): String {
-        val last = nav.toDouble()
-        val res = (last - cost) * quantity
-        MyLog.d(TAG, "getCysy: $res")
-        return res.percentFomart
+    private val cysy = { nav: String, quantity: Double, cost: Double ->
+        try {
+            val last = nav.toDouble()
+            val res = (last - cost) * quantity
+            MyLog.d(TAG, "getCysy: $res")
+            res.decimalFomart
+        } catch (e: Exception) {
+            ""
+        }
     }
+
 
     /**
      * 持有收益率=（last价-成本价）/成本价
@@ -251,14 +259,18 @@ class MyViewModel : ViewModel() {
      * @param cost 成本
      * @return 持有收益率
      */
-    @SuppressLint("DefaultLocale")
-    private fun getCysyl(nav: String, cost: Double): String {
-        val last = nav.toDouble()
-        var res = (last - cost) / cost
-        res *= 100
-        MyLog.d(TAG, "getCysyl: $res")
-        return res.percentFomart
+    private val cysyl = { nav: String, cost: Double ->
+        try {
+            val last = nav.toDouble()
+            var res = (last - cost) / cost
+            res *= 100
+            MyLog.d(TAG, "getCysyl: $res")
+            res.decimalFomart
+        } catch (e: Exception) {
+            ""
+        }
     }
+
 
     /**
      * 估算收益=涨跌幅*持有额
@@ -267,11 +279,10 @@ class MyViewModel : ViewModel() {
      * @param quantity 持有额
      * @return 估算收益
      */
-    @SuppressLint("DefaultLocale")
-    private fun getGssy(gszzl: String, quantity: Double, nav: String): String {
+    private val gssy = { gszzl: String, quantity: Double, nav: String ->
         try {
             if (gszzl == "--") {
-                return "0.0"
+                "0.0"
             }
             val last = nav.toDouble()
             var gszdf = gszzl.toDouble()
@@ -279,13 +290,13 @@ class MyViewModel : ViewModel() {
             gszdf *= 0.01
             val res = gszdf * last * quantity
             MyLog.d(TAG, "getGssy: $res")
-            return res.percentFomart
+            res.decimalFomart
         } catch (e: Exception) {
             MyLog.e(TAG, "getGssy" + e.message)
-            return ""
+            ""
         }
-
     }
+
 
     /**
      * 实际收益=【(今日价/(1+涨跌幅))-今日价】*持有额
@@ -296,10 +307,10 @@ class MyViewModel : ViewModel() {
      * @return 估算收益
      */
 
-    private fun getSy(gszzl: String, quantity: Double, nav: String): String {
+    private val sy = { gszzl: String, quantity: Double, nav: String ->
         try {
             if (gszzl == "--") {
-                return "0.0"
+                "0.0"
             }
             val today = nav.toDouble()
             var gszdf = gszzl.toDouble()
@@ -307,13 +318,12 @@ class MyViewModel : ViewModel() {
             gszdf *= 0.01
             val res = quantity * (today - (today / (1 + gszdf)))
             MyLog.d(TAG, "getGssy: $res")
-            return res.percentFomart
+            res.decimalFomart
         } catch (e: Exception) {
             MyLog.e(TAG, "getGssy" + e.message)
-            return ""
+            ""
         }
     }
-
 
     fun initSelectedFundCoro() {
         val api = Fundmobapi
@@ -338,7 +348,7 @@ class MyViewModel : ViewModel() {
         }
     }
 
-    fun getHoliday() {
+    private fun getHoliday() {
         @SuppressLint("SimpleDateFormat") val today =
             SimpleDateFormat("yyyy-MM-dd").format(Date().time)
         MyLog.d(TAG, "today: $today")
@@ -377,7 +387,7 @@ class MyViewModel : ViewModel() {
                             timerTask,
                             60000,  //延迟60秒执行
                             60000
-                        ) //
+                        )
                     } else {
                         timer.cancel()
                         this.cancel()
