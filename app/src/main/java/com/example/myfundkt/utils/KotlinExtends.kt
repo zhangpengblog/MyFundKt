@@ -1,5 +1,6 @@
 package com.example.myfundkt.utils
 
+import android.graphics.PointF
 import android.view.View
 import com.example.myfundkt.bean.CollectionBean
 import com.example.myfundkt.db.KtDatabase
@@ -31,21 +32,16 @@ val Float.decimalFomart
 val Double.decimalFomart
     get() = String.format("%.2f", this)
 
-fun percentFomart (a:Float,b:Float):String{
-   return try {
-        ((a / b) * 100).decimalFomart+"%"
-    }catch (e:Exception){
-        ""
-    }
-}
 
-fun percentFomart (a:Double,b:Double):String{
-    return try {
-        ((a / b) * 100).decimalFomart+"%"
-    }catch (e:Exception){
-        ""
-    }
-}
+val PointF.test:String
+get() = ((this.x/this.y)*100).decimalFomart+"%"
+
+
+data class Percent(val x:Float,val y:Float)
+val Percent.fomart :String
+get() = ((this.x/this.y)*100).decimalFomart+"%"
+
+
 
 
 

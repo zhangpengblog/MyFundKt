@@ -54,7 +54,6 @@ class MyFundFragment : Fragment() {
         activity?.title = "首页"
 
         binding = FragmentMyFundBinding.inflate(inflater, container, false)
-//        return inflater.inflate(R.layout.fragment_my_fund, container, false)
         return binding.root
     }
 
@@ -64,21 +63,14 @@ class MyFundFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         controller = view.let { Navigation.findNavController(it) }
 
-        binding.fab.setOnClickListener {
-            showAddDialog()
-        }
-        //滑动的时候隐藏or显示fab
-        binding.nestedscrollview.setOnScrollChangeListener(object : View.OnScrollChangeListener {
-            override fun onScrollChange(
-                v: View?,
-                scrollX: Int,
-                scrollY: Int,
-                oldScrollX: Int,
-                oldScrollY: Int
-            ) {
-
+        with(binding) {
+            fab.setOnClickListener {
+                showAddDialog()
+            }
+            //滑动的时候隐藏or显示fab
+            nestedscrollview.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
                 if (scrollY - oldScrollY > 30) {
-                    if (binding.fab.visibility == View.VISIBLE) {
+                    if (fab.visibility == View.VISIBLE) {
                         val hideAnim = TranslateAnimation(
                             Animation.RELATIVE_TO_SELF, 0.0f,
                             Animation.RELATIVE_TO_SELF, 0.0f,
@@ -86,13 +78,13 @@ class MyFundFragment : Fragment() {
                             Animation.RELATIVE_TO_SELF, 1.0f
                         )
                         hideAnim.duration = 300
-                        binding.fab.startAnimation(hideAnim)
+                        fab.startAnimation(hideAnim)
                     }
 
-                    binding.fab.visibility = View.GONE
+                    fab.visibility = View.GONE
                 }
                 if (oldScrollY - scrollY > 30) {
-                    if (binding.fab.visibility == View.GONE) {
+                    if (fab.visibility == View.GONE) {
                         val showAnim = TranslateAnimation(
                             Animation.RELATIVE_TO_SELF, 0.0f,
                             Animation.RELATIVE_TO_SELF, 0.0f,
@@ -100,51 +92,56 @@ class MyFundFragment : Fragment() {
                             Animation.RELATIVE_TO_SELF, 0.0f
                         )
                         showAnim.duration = 300
-                        binding.fab.startAnimation(showAnim)
+                        fab.startAnimation(showAnim)
                     }
 
-                    binding.fab.visibility = View.VISIBLE
+                    fab.visibility = View.VISIBLE
                 }
             }
 
-        })
-
-        binding.refreshLayout.setOnRefreshListener {
-            refreshData()
-        }
-
-        binding.top.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.top.adapter = topAdapter
-
-        binding.bottom.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        binding.bottom.adapter = selectionAdapter
-        selectionAdapter.setOnItemClickListener { _, _, position ->
-
-            val args = Bundle()
-            args.putString("代码", selectionData[position].代码)
-//                controller.navigate(R.id.action_myFundFragment_to_fundInfoFragment,args)
-            myViewModel.infomationCode.value = selectionData[position].代码
-            MyLog.d(TAG, "代码" + selectionData[position].代码)
-
-            controller.navigate(R.id.action_myFundFragment_to_pagesFragment)
-
-
-        }
-        selectionAdapter.setOnItemLongClickListener(object : OnItemLongClickListener {
-
-            override fun onItemLongClick(
-                adapter: BaseQuickAdapter<*, *>,
-                view: View,
-                position: Int
-            ): Boolean {
-
-                delete(position)
-                return true
+            refreshLayout.setOnRefreshListener {
+                refreshData()
             }
 
-        })
+            with(top) {
+                layoutManager =
+                    LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                adapter = topAdapter
+            }
+
+            with(bottom) {
+                layoutManager =
+                    LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                adapter = selectionAdapter
+            }
+
+        }
+        with(selectionAdapter) {
+            setOnItemClickListener { _, _, position ->
+
+                val args = Bundle()
+                args.putString("代码", selectionData[position].代码)
+                myViewModel.infomationCode.value = selectionData[position].代码
+                MyLog.d(TAG, "代码" + selectionData[position].代码)
+
+                controller.navigate(R.id.action_myFundFragment_to_pagesFragment)
+
+
+            }
+            setOnItemLongClickListener(object : OnItemLongClickListener {
+
+                override fun onItemLongClick(
+                    adapter: BaseQuickAdapter<*, *>,
+                    view: View,
+                    position: Int
+                ): Boolean {
+
+                    delete(position)
+                    return true
+                }
+
+            })
+        }
 
 
     }
@@ -177,11 +174,12 @@ class MyFundFragment : Fragment() {
     }
 
     private fun refreshData() {
-        myViewModel.let {
-            it.initCode()
-            it.initFundCoro()
-            it.initSelectedFundCoro()
+        with(myViewModel){
+            initCode()
+            initFundCoro()
+            initSelectedFundCoro()
         }
+
 
     }
 
@@ -195,7 +193,6 @@ class MyFundFragment : Fragment() {
             progressBarVisibility.observe(viewLifecycleOwner, {
                 binding.progressBar.visibility = it
             })
-
             topLiveData.observe(viewLifecycleOwner, {
                 binding.refreshLayout.finishRefresh()
                 Log.d(TAG, "onActivityCreated:topLiveData " + it)
@@ -222,12 +219,12 @@ class MyFundFragment : Fragment() {
                     }
                     binding.amount.apply {
                         setTextColor(Color.RED)
-                        text=amount.decimalFomart
+                        text = amount.decimalFomart
                     }
 
 
                     //持有收益率
-                    percentFomart(holding,amount).also {
+                    Percent(holding, amount).fomart.also {
                         binding.holding.apply {
                             text = it
                             if (it.contains("-")) {
@@ -264,7 +261,8 @@ class MyFundFragment : Fragment() {
                     }
 
                     //今日收益率
-                    percentFomart(today ,amount).also {
+
+                    Percent(today, amount).fomart.also {
                         binding.today.apply {
                             text = it
                             if (it.contains("-")) {

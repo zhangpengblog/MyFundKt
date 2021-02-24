@@ -18,10 +18,6 @@ private lateinit var lineChart: LineChart
 class FundInfoFragment : Fragment() {
     private lateinit var myViewModel: MyViewModel
     private lateinit var binding: FundInfoFragmentBinding
-//    companion object {
-//        fun newInstance() = FundInfoFragment()
-//    }
-
     private lateinit var viewModel: FundInfoViewModel
 
     override fun onCreateView(
@@ -30,22 +26,21 @@ class FundInfoFragment : Fragment() {
     ): View {
         activity?.title = "详情"
         binding = FundInfoFragmentBinding.inflate(inflater, container, false)
-//        return inflater.inflate(R.layout.fund_info_fragment, container, false)
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         lineChart = view.findViewById(R.id.line_chart)
-        val _dataList = mutableListOf<LineChart.Data<String>>()
-        _dataList.add(LineChart.Data("09:30"))
-        for (i in 1..240) {
-            _dataList.add(LineChart.Data(""))
-        }
-        _dataList.add(LineChart.Data("15:30"))
+        mutableListOf<LineChart.Data<String>>().apply {
+            add(LineChart.Data("09:30"))
+            for (i in 1..240) {
+                add(LineChart.Data(""))
+            }
+            add(LineChart.Data("15:30"))
+            lineChart.setXAxisBasisData(this)
 
-        _dataList.let {
-            lineChart.setXAxisBasisData(it)
         }
 
     }
@@ -88,7 +83,7 @@ class FundInfoFragment : Fragment() {
         viewModel.expansion.observe(viewLifecycleOwner, {
             binding.fundTitle.text = ""
             it?.let { it1 ->
-                (it1.sHORTNAME + "(" + it1.fCODE + ")").also { binding.fundTitle.text = it }
+                (it1.sHORTNAME + "(" + it1.fCODE + ")").also { it2 -> binding.fundTitle.text = it2 }
             }
 
 

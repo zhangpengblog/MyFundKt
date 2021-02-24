@@ -107,7 +107,7 @@ class MyViewModel : ViewModel() {
                 }
             }
             Log.d(TAG, "setSelectionData: $list")
-//            _collection.postValue(null)
+
             _collection.postValue(list.sortByMoneyDes)
 
 
@@ -134,12 +134,12 @@ class MyViewModel : ViewModel() {
                     val 涨跌幅: String = b.NAVCHGRT //涨跌幅
                     val 持有额 = cye(昨日价, 持有份额) //持有额
                     val 持有收益 = cysy(昨日价, 持有份额, 成本价) //持有收益
-                    val 持有收益率 = cysyl(昨日价, 成本价) //持有收益率
-                    var 估算收益: String //估算收益
+                    val 持有收益率 = cysyl(昨日价, 成本价.toFloat()) //持有收益率
+                    val 估算收益: String //估算收益
                     Log.d(TAG, "setLiveCollection: " + b.PDATE)
                     Log.d(TAG, "setLiveCollection:时间 $时间")
 
-                    var 涨跌: String
+                    val 涨跌: String
                     var updated = false
                     if (b.PDATE == b.GZTIME.substring(IntRange(0, 9))) {//已结算
                         Log.d(TAG, "setLiveCollection: 已结算")
@@ -153,7 +153,7 @@ class MyViewModel : ViewModel() {
                     }
 
                     return@async CollectionBean(
-                        代码, 名称, 持有份额.decimalFomart, 持有额, 持有收益, "$持有收益率%",
+                        代码, 名称, 持有份额.decimalFomart, 持有额, 持有收益, 持有收益率,
                         "$涨跌%", 估算收益, 时间, updated
                     )
                 }
@@ -195,14 +195,6 @@ class MyViewModel : ViewModel() {
 
 
     private fun formatCode(list: List<String>): String {
-//        var fo = StringBuilder()
-//        for (s in list) {
-//            fo.append(s).append(",")
-//        }
-//        if (fo.isNotEmpty()) {
-//            fo.deleteLastChar
-//            fo = StringBuilder(fo.substring(0, fo.length - 1))
-//        }
         return try {
             val fo: StringBuilder = list.splitWithComma
             fo.deleteLastChar
@@ -259,13 +251,10 @@ class MyViewModel : ViewModel() {
      * @param cost 成本
      * @return 持有收益率
      */
-    private val cysyl = { nav: String, cost: Double ->
+    private val cysyl = { nav: String, cost: Float ->
         try {
-            val last = nav.toDouble()
-            var res = (last - cost) / cost
-            res *= 100
-            MyLog.d(TAG, "getCysyl: $res")
-            res.decimalFomart
+            val last = nav.toFloat()
+            Percent((last - cost), cost).fomart
         } catch (e: Exception) {
             ""
         }
