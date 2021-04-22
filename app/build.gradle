@@ -14,8 +14,8 @@ android {
         applicationId "com.example.myfundkt"
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode 7
-        versionName "2.0"
+        versionCode 8
+        versionName "2.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

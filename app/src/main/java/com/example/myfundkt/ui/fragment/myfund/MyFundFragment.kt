@@ -28,9 +28,11 @@ import com.example.myfundkt.databinding.FragmentMyFundBinding
 import com.example.myfundkt.db.entity.FoudInfoEntity
 import com.example.myfundkt.ui.MyViewModel
 import com.example.myfundkt.utils.*
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 
 private const val TAG = "MyFundFragment"
@@ -46,6 +48,7 @@ class MyFundFragment : Fragment() {
     private var topAdapter: TopAdapter = TopAdapter(topData)
     private var selectionAdapter: SelectionAdapter = SelectionAdapter(selectionData)
     private lateinit var controller: NavController
+    private var mCurrentState:State = State.IDLE
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -68,36 +71,54 @@ class MyFundFragment : Fragment() {
                 showAddDialog()
             }
             //滑动的时候隐藏or显示fab
-            nestedscrollview.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
-                if (scrollY - oldScrollY > 30) {
-                    if (fab.visibility == View.VISIBLE) {
-                        val hideAnim = TranslateAnimation(
-                            Animation.RELATIVE_TO_SELF, 0.0f,
-                            Animation.RELATIVE_TO_SELF, 0.0f,
-                            Animation.RELATIVE_TO_SELF, 0.0f,
-                            Animation.RELATIVE_TO_SELF, 1.0f
-                        )
-                        hideAnim.duration = 300
-                        fab.startAnimation(hideAnim)
-                    }
+            appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, i ->
+                if (appBarLayout != null) {
+                    when {
+                        i == 0 -> {
+//                            if (mCurrentState != State.EXPANDED) {
+//                                onStateChanged(appBarLayout, State.EXPANDED);
+//                            }
+                            mCurrentState = State.EXPANDED;
+                            if (fab.visibility == View.GONE) {
+                                val showAnim = TranslateAnimation(
+                                    Animation.RELATIVE_TO_SELF, 0.0f,
+                                    Animation.RELATIVE_TO_SELF, 0.0f,
+                                    Animation.RELATIVE_TO_SELF, 1.0f,
+                                    Animation.RELATIVE_TO_SELF, 0.0f
+                                )
+                                showAnim.duration = 300
+                                fab.startAnimation(showAnim)
+                            }
 
-                    fab.visibility = View.GONE
-                }
-                if (oldScrollY - scrollY > 30) {
-                    if (fab.visibility == View.GONE) {
-                        val showAnim = TranslateAnimation(
-                            Animation.RELATIVE_TO_SELF, 0.0f,
-                            Animation.RELATIVE_TO_SELF, 0.0f,
-                            Animation.RELATIVE_TO_SELF, 1.0f,
-                            Animation.RELATIVE_TO_SELF, 0.0f
-                        )
-                        showAnim.duration = 300
-                        fab.startAnimation(showAnim)
-                    }
+                            fab.visibility = View.VISIBLE
+                        }
+                        abs(i) >= appBarLayout.totalScrollRange -> {
+//                            if (mCurrentState != State.COLLAPSED) {
+//                                onStateChanged(appBarLayout, State.COLLAPSED);
+//                            }
+                            if (fab.visibility == View.VISIBLE) {
+                                val hideAnim = TranslateAnimation(
+                                    Animation.RELATIVE_TO_SELF, 0.0f,
+                                    Animation.RELATIVE_TO_SELF, 0.0f,
+                                    Animation.RELATIVE_TO_SELF, 0.0f,
+                                    Animation.RELATIVE_TO_SELF, 1.0f
+                                )
+                                hideAnim.duration = 300
+                                fab.startAnimation(hideAnim)
+                            }
 
-                    fab.visibility = View.VISIBLE
+                            fab.visibility = View.GONE
+                            mCurrentState = State.COLLAPSED;
+                        }
+                        else -> {
+//                            if (mCurrentState != State.IDLE) {
+//                                onStateChanged(appBarLayout, State.IDLE);
+//                            }
+                            mCurrentState = State.IDLE;
+                        }
+                    }
                 }
-            }
+            })
 
             refreshLayout.setOnRefreshListener {
                 refreshData()
@@ -193,6 +214,11 @@ class MyFundFragment : Fragment() {
             progressBarVisibility.observe(viewLifecycleOwner, {
                 binding.progressBar.visibility = it
             })
+
+            progressBarInToolbarVisibility.observe(viewLifecycleOwner,{
+                binding.progressBarInToolbar.visibility = it
+            })
+
             topLiveData.observe(viewLifecycleOwner, {
                 binding.refreshLayout.finishRefresh()
                 Log.d(TAG, "onActivityCreated:topLiveData " + it)
@@ -201,6 +227,7 @@ class MyFundFragment : Fragment() {
                 topAdapter.notifyDataSetChanged()
 
             })
+
             collection.observe(viewLifecycleOwner, {
                 binding.refreshLayout.finishRefresh()
                 if (it != null) {
@@ -335,5 +362,7 @@ class MyFundFragment : Fragment() {
         }
     }
 
-
+    enum class State {
+        EXPANDED, COLLAPSED, IDLE
+    }
 }

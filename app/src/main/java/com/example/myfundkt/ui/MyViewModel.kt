@@ -43,13 +43,19 @@ class MyViewModel : ViewModel() {
     val progressBarVisibility: LiveData<Int> = _progressBarVisibility
 
 
+    //progressBarInToolbar loading显示
+    private val _progressBarInToolbarVisibility = MutableLiveData(View.VISIBLE)
+    val progressBarInToolbarVisibility: LiveData<Int> = _progressBarInToolbarVisibility
+
+
+
     init {
         initCode()
     }
 
 
     fun initCode() {
-        _progressBarVisibility.value = View.VISIBLE
+
         initFundCoro()
         getHoliday()
         codes = emptyList()
@@ -65,11 +71,13 @@ class MyViewModel : ViewModel() {
 
 
     fun initFundCoro() {
+        _progressBarInToolbarVisibility.value = View.VISIBLE
         val api = Push2api
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = api.getfunds(getExponentMap())
                 if (response.isSuccessful) {
+                    _progressBarInToolbarVisibility.postValue(View.GONE)
                     val topBean = response.body()
                     topBean?.let {
                         val diffBeanList: List<Diff> = it.data.diff
@@ -79,6 +87,7 @@ class MyViewModel : ViewModel() {
                         }
                         _topLiveData.postValue(diffBeanList)
                     }
+
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "initFundCoro: ${e.message}", e)
@@ -315,12 +324,14 @@ class MyViewModel : ViewModel() {
     }
 
     fun initSelectedFundCoro() {
+        _progressBarVisibility.value = View.VISIBLE
         val api = Fundmobapi
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _progressBarVisibility.postValue(View.GONE)
+
                 val response = api.getSellected(getSellectionMap())
                 if (response.isSuccessful) {
+                    _progressBarVisibility.postValue(View.GONE)
                     val selectionBean = response.body()
                     selectionBean?.let {
                         it.Datas?.let { it1 ->

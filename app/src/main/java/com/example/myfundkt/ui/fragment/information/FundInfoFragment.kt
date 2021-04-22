@@ -51,43 +51,43 @@ class FundInfoFragment : Fragment() {
             progressBarVisibility.observe(viewLifecycleOwner, {
                 binding.progressBar.visibility = it
             })
+
+            data.observe(viewLifecycleOwner, {
+                it?.let { it1 ->
+                    lineChart.setData(it1)
+                }
+
+            })
+
+            start.observe(viewLifecycleOwner, {
+                it?.let { it1 ->
+                    lineChart.setMidStart(it1)
+                }
+
+            })
+
+            expansion.observe(viewLifecycleOwner, {
+                binding.fundTitle.text = ""
+                it?.let { it1 ->
+                    (it1.sHORTNAME + "(" + it1.fCODE + ")").also { it2 ->
+                        binding.fundTitle.text = it2
+                    }
+                }
+
+            })
         }
         Log.d(TAG, "onActivityCreated:code ")
-        myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java)
-        myViewModel.infomationCode.observe(requireActivity(), {
-            Log.d(TAG, "onActivityCreated:code $it")
-            it?.let {
-                viewModel.initSellectionFundCoro(it)
-            }
-        })
+        myViewModel = ViewModelProvider(requireActivity()).get(MyViewModel::class.java).apply {
+            infomationCode.observe(requireActivity(), {
+                Log.d(TAG, "onActivityCreated:code $it")
+                it?.let {
+                    viewModel.initSellectionFundCoro(it)
+                }
+            })
+        }
 
 
-        // TODO: Use the ViewModel
 
-        viewModel.data.observe(viewLifecycleOwner, {
-            it?.let { it1 ->
-                lineChart.setData(it1)
-            }
-
-
-        })
-
-        viewModel.start.observe(viewLifecycleOwner, {
-            it?.let { it1 ->
-                lineChart.setMidStart(it1)
-            }
-
-
-        })
-
-        viewModel.expansion.observe(viewLifecycleOwner, {
-            binding.fundTitle.text = ""
-            it?.let { it1 ->
-                (it1.sHORTNAME + "(" + it1.fCODE + ")").also { it2 -> binding.fundTitle.text = it2 }
-            }
-
-
-        })
     }
 
 }

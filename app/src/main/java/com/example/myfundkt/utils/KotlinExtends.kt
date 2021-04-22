@@ -82,3 +82,7 @@ val List<CollectionBean>.sortByMoneyDes: List<CollectionBean>
 
 val ktDao: KtDao
     get() = KtDatabase.dataBase.getDao()
+
+
+val senondsStampString:String
+get() = (java.lang.System.currentTimeMillis() / 1000).toString()
