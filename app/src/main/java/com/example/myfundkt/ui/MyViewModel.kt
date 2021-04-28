@@ -12,10 +12,8 @@ import com.example.myfundkt.http.Api
 import com.example.myfundkt.http.GetRetrofit
 import com.example.myfundkt.http.response.HolidayResponse
 import com.example.myfundkt.utils.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import okhttp3.Cache.Companion.varyHeaders
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.util.*
@@ -70,8 +68,11 @@ class MyViewModel : ViewModel() {
     }
 
 
-    fun initFundCoro() {
-        _progressBarInToolbarVisibility.value = View.VISIBLE
+    fun initFundCoro( errors:Int = 0) {
+        var errorTimes = errors
+        if (_progressBarInToolbarVisibility.value == View.GONE){
+            _progressBarInToolbarVisibility.postValue(View.VISIBLE)
+        }
         val api = Push2api
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -91,6 +92,16 @@ class MyViewModel : ViewModel() {
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "initFundCoro: ${e.message}", e)
+                errorTimes +=1
+                Log.e(TAG, "initFundCoro errorTimes: $errorTimes")
+                if (errorTimes<3){
+                    delay(3000L)
+                    initFundCoro(errorTimes)
+                }else{
+                    Log.d(TAG, "initFundCoro: errorTimes>3")
+                    _progressBarInToolbarVisibility.postValue(View.GONE)
+                }
+                this.cancel()
             }
         }
     }

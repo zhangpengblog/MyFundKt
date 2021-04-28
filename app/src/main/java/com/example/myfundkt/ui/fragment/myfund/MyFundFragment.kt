@@ -19,6 +19,8 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.listener.OnItemLongClickListener
+import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
+import com.ethanhua.skeleton.Skeleton
 import com.example.myfundkt.R
 import com.example.myfundkt.adapter.SelectionAdapter
 import com.example.myfundkt.adapter.TopAdapter
@@ -49,6 +51,9 @@ class MyFundFragment : Fragment() {
     private var selectionAdapter: SelectionAdapter = SelectionAdapter(selectionData)
     private lateinit var controller: NavController
     private var mCurrentState:State = State.IDLE
+    private lateinit var skeletonScreen: RecyclerViewSkeletonScreen
+    private lateinit var topSkeletonScreen: RecyclerViewSkeletonScreen
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -122,18 +127,32 @@ class MyFundFragment : Fragment() {
 
             refreshLayout.setOnRefreshListener {
                 refreshData()
+                skeletonScreen.show()
+                topSkeletonScreen.show()
             }
 
             with(top) {
                 layoutManager =
                     LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 adapter = topAdapter
+                topSkeletonScreen = Skeleton.bind(this)
+                    .adapter(topAdapter)
+                    .color(R.color.dark_transparent)
+                    .load(R.layout.item_top_skeleton)
+                    .count(2)
+                    .show()
             }
 
             with(bottom) {
                 layoutManager =
                     LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                 adapter = selectionAdapter
+                skeletonScreen = Skeleton.bind(this)
+                    .adapter(selectionAdapter)
+                    .color(R.color.dark_transparent)
+                    .load(R.layout.item_my_fund_skeleton)
+                    .show()
+
             }
 
         }
@@ -197,8 +216,6 @@ class MyFundFragment : Fragment() {
     private fun refreshData() {
         with(myViewModel){
             initCode()
-            initFundCoro()
-            initSelectedFundCoro()
         }
 
 
@@ -221,10 +238,15 @@ class MyFundFragment : Fragment() {
 
             topLiveData.observe(viewLifecycleOwner, {
                 binding.refreshLayout.finishRefresh()
-                Log.d(TAG, "onActivityCreated:topLiveData " + it)
-                topData.clear()
-                topData.addAll(it)
-                topAdapter.notifyDataSetChanged()
+                Log.d(TAG, "onActivityCreated:topLiveData $it")
+                if (it != null && it.count()>0) {
+                    topData.clear()
+                    topData.addAll(it)
+                    topAdapter.notifyDataSetChanged()
+                    binding.top.postDelayed({
+                        topSkeletonScreen.hide()
+                    },2000)
+                }
 
             })
 
@@ -234,6 +256,10 @@ class MyFundFragment : Fragment() {
                     selectionData.clear()
                     selectionData.addAll(it)
                     selectionAdapter.notifyDataSetChanged()
+                    binding.bottom.postDelayed({
+                        skeletonScreen.hide()
+                    },3000)
+
                     var amount = 0f
                     var holding = 0f
                     var today = 0f

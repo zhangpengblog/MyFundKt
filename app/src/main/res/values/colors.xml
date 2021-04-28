@@ -10,4 +10,7 @@
     <color name="transparent">#00000000</color>
     <color name="LTGRAY">#E6F9F9F9</color>
     <color name="green">#00880E</color>
+
+    <color name="dark_transparent">#24000000</color>
+    <color name="light_transparent">#16000000</color>
 </resources>
